@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
-namespace JoinedTogetherGmtk2021.Game
+namespace RollTheDiceGmtk2022.Game
 {
     public class Room
     {

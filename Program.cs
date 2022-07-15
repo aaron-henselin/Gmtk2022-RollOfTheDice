@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JoinedTogetherGmtk2021
+namespace RollTheDiceGmtk2022
 {
     public class Program
     {
