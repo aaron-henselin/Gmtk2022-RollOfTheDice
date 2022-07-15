@@ -1,0 +1,176 @@
+﻿@using JoinedTogetherGmtk2021.Game
+
+
+
+<div id="game" style="display: none;">
+    <CastleGrid Floor="@CurrentFloor"
+                Descended="@(coord=>OnDescended(coord))"
+                Ascended="@(coord=>OnAscended(coord))"
+                WinCondition="@TestWinCondition"
+                WinConditionReached="@(()=>OnWinConditionReached())"
+                ResetRequested="@OnReset" @ref="_grid"
+                EnableBackpack="@EnableBackpack"/>
+
+    
+    <p style="margin-top: 30px;">
+        <small class="badge badge-secondary">
+            ⬅️⬆️⬇️➡️ to move.
+        </small>
+        <small class="badge badge-secondary">
+            ⬆️⬇️ ascend/descend ladders. 
+        </small>
+        <small class="badge badge-secondary">
+            🖱️ drag & drop tiles
+        </small>
+        <br/>
+        Stuck? 🆁 at any time to restart.
+    </p>
+    <p style="margin-top: 30px;font-style: italic;"></p>
+</div>
+
+
+
+@inject IJSRuntime JSRuntime
+@code
+{
+    CastleGrid _grid;
+
+	[Parameter]
+	public Func<Floor> FloorFactory { get; set; }
+
+	[Parameter]
+	public EventCallback WinConditionReached { get; set; }
+
+	[Parameter]
+	public Func<CastleScenario, bool> WinCondition { get; set; }
+
+    [Parameter]
+    public bool EnableBackpack { get; set; }
+
+    public Floor CurrentFloor { get; set; }
+
+    private bool TestWinCondition()
+    {
+        return WinCondition(this);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (WinCondition == null)
+            WinCondition = scenario =>
+            {
+                var playerPositions = CurrentFloor.GameObjects.Where(x => x.IsPlayer).Select(x => x.Position).ToList();
+                var exitPositions = CurrentFloor.GameObjects.Where(x => x.IsExit).Select(x => x.Position);
+                foreach (var exitPosition in exitPositions)
+                {
+                    var atExit = playerPositions.Contains(exitPosition);
+					if (!atExit)
+                        return false;
+                }
+                return true;
+            };
+
+		StartGame();
+
+        base.OnParametersSet();
+    }
+
+    private void StartGame()
+    {
+        var floorTemplate = FloorFactory();
+        floorTemplate.Depth = 1;
+        this.CurrentFloor = floorTemplate;
+    }
+
+    private void OnReset()
+    {
+        _grid.ClearBackpack();
+        StartGame();
+
+        StateHasChanged();
+    }
+
+    private async Task OnWinConditionReached()
+    {
+        await JSRuntime.InvokeAsync<string>("PlayWinSound");
+        await JSRuntime.InvokeAsync<string>("hideGame");
+        await Task.Delay(200);
+        await WinConditionReached.InvokeAsync();
+    }
+
+    private async Task OnAscended(IReadOnlyCollection<FloorCoord> ascCoods)
+    {
+        await JSRuntime.InvokeAsync<string>("PlayLadderSound");
+        await JSRuntime.InvokeAsync<string>("flashGame");
+        await Task.Delay(200);
+
+        var ladderPositions = CurrentFloor
+            .Layout
+            .Where(x => x.Value != null && x.Value.RoomType.HasLadderAsc)
+            .Select(x => x.Key);
+
+        Floor upperFloor;
+        if (CurrentFloor.ParentFloor != null)
+            upperFloor = CurrentFloor.ParentFloor;
+        else
+        {
+            upperFloor = FloorFactory();
+            upperFloor.Depth = CurrentFloor.Depth - 1;
+        }
+
+        foreach (var ladderPosition in ladderPositions)
+        {
+            var currentRoomType = upperFloor.Layout[ladderPosition]?.RoomType;
+            //if (!currentRoomType.Equals(RoomTypes.PATHN___))
+            //{
+                Console.WriteLine("adding ladder to "+ladderPosition);
+                upperFloor.Layout[ladderPosition] = new Room(RoomTypes.PATHN___);
+            //}
+        }
+
+        foreach (var ascCood in ascCoods)
+        {
+            var playerExistsAtPosition = upperFloor.GameObjects.Any(x => x.IsPlayer && x.Position.Equals(ascCood));
+            if (!playerExistsAtPosition)
+                upperFloor.GameObjects.Add(new GameObject{Position = ascCood,IsPlayer = true});
+        }
+
+		Console.WriteLine("ASSIGING CURRENT FLOOR");
+        this.CurrentFloor = upperFloor;
+
+        StateHasChanged();
+    }
+
+    private async Task OnDescended(IReadOnlyCollection<FloorCoord> descCoods)
+    {
+        await JSRuntime.InvokeAsync<string>("PlayLadderSound");
+        await JSRuntime.InvokeAsync<string>("flashGame");
+        await Task.Delay(200);
+
+        var ladderPositions = CurrentFloor
+            .Layout
+            .Where(x => x.Value != null && x.Value.RoomType.HasLadderDesc)
+            .Select(x => x.Key);
+
+        var lowerFloor = FloorFactory();
+        lowerFloor.Depth = CurrentFloor.Depth + 1;
+		foreach (var ladderPosition in ladderPositions)
+            lowerFloor.Layout[ladderPosition] = new Room(RoomTypes.PATH__S_);
+
+        foreach (var descCood in descCoods)
+        {
+            var playerExistsAtPosition = lowerFloor.GameObjects.Any(x => x.IsPlayer && x.Position.Equals(descCood));
+            if (!playerExistsAtPosition)
+                lowerFloor.GameObjects.Add(new GameObject{Position = descCood,IsPlayer = true});
+        }
+
+        lowerFloor.ParentFloor = CurrentFloor;
+        CurrentFloor = lowerFloor;
+        StateHasChanged();
+    }
+
+
+
+
+}
+
