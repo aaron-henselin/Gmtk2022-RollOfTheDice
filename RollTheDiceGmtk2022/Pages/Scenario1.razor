@@ -38,16 +38,24 @@
         font-size: 1rem;
     }
 
-    .draggable-dice-match-rule-receiver {
+    .dice-match-rule-slot {
+        background-color: #007bff;
         border-radius: .25rem;
         border-style: solid;
         border-width: 1px;
+        color: #fff;
         display: inline-block;
+        font-size: .75rem;
         height: 18px;
         width: 50px;
     }
 
-    .card .draggable-dice-match-rule-receiver {
+    .dice-match-rule-slot:empty {
+        background-color: transparent;
+        border-color: #007bff;
+    }
+
+    .card .dice-match-rule-slot {
         margin-top: 15px;
     }
 
@@ -84,36 +92,7 @@
 
         <div class="row">
             <div class="col-3">
-                <div class="card enemy-card">
-                    <div class="card-header text-right">
-                        <span class="badge badge-danger hp">@EnemyCard.Hp</span>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        @for (var i = 0; i < EnemyCard.Slots.Count; i++)
-                        {
-                            var slot = EnemyCard.Slots[i];
-                            var rule = slot.Rule;
-
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-4 border-right">
-                                        <span class="bg-white border-primary draggable-dice-match-rule-receiver">
-                                            @if (rule != null)
-                                            {
-                                                <span class="badge badge-primary draggable-dice-match-rule">@rule.Value</span>
-                                            }
-                                        </span>
-                                    </div>
-
-                                    <div class="col-8">
-                                        <div><strong>@slot.Effect.Name</strong></div>
-                                        <div>@slot.Effect.Type.ToString() : @slot.Effect.Amount</div>
-                                    </div>
-                                </div>
-                            </li>
-                        }
-                    </ul>
-                </div>
+                <PlacedCard Card="@EnemyCard" IsEnemy="@true"></PlacedCard>
             </div>
 
             <div class="col-9">
@@ -123,44 +102,7 @@
                         var card = kvp.Value;
                         var cardLocation = new CardLocation(true, kvp.Key);
 
-                        if (card == null)
-                        {
-                            <div class="card missing-card" ondragover="event.preventDefault();" @ondrop="@(() => HandleCardDragStop(cardLocation))"></div>
-                            continue;
-                        }
-
-                        <div class="card" draggable="true" @ondragstart="@(() => HandleCardDragStart(cardLocation))" ondragover="event.preventDefault();" @ondrop="@(() => HandleCardDragStop(cardLocation))">
-                            <div class="card-header text-right">
-                                <span class="badge badge-success hp">@card.Hp</span>
-                            </div>
-
-                            <ul class="list-group list-group-flush">
-                                @for (var i = 0; i < card.Slots.Count; i++)
-                                {
-                                    var slot = card.Slots[i];
-                                    var rule = slot.Rule;
-                                    var diceMatchRuleLocation = new DiceMatchRuleLocation(false, kvp.Key, i);
-
-                                    <li class="list-group-item">
-                                        <div class="row">
-                                            <div class="col-4 border-right">
-                                                <span class="bg-white border-primary draggable-dice-match-rule-receiver" ondragover="event.preventDefault();" @ondrop="@(() => HandleDiceRuleDragStop(diceMatchRuleLocation))">
-                                                    @if (rule != null)
-                                                    {
-                                                        <span class="badge badge-primary draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(diceMatchRuleLocation))">@rule.Value</span>
-                                                    }
-                                                </span>
-                                            </div>
-
-                                            <div class="col-8">
-                                                <div><strong>@slot.Effect.Name</strong></div>
-                                                <div>@slot.Effect.Type.ToString() : @slot.Effect.Amount</div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
+                        <PlacedCard Card="@card" Location="@cardLocation" OnDragStart="@HandleCardDragStart" OnDragStop="@HandleCardDragStop" OnDiceMatchRuleDragStart="@HandleDiceRuleDragStart" OnDiceMatchRuleDragStop="@HandleDiceRuleDragStop"></PlacedCard>
                     }
                 </div>
 
@@ -395,14 +337,12 @@
         CardLocationDragStart = location;
     }
 
-    private async Task HandleCardDragStop(CardLocation location)
+    private void HandleCardDragStop(CardLocation location)
     {
         if (CardLocationDragStart == null)
             return;
 
         OnCardMoved(CardLocationDragStart.Value.CollectionIndex, location.CollectionIndex);
-
-        await CardMoved.InvokeAsync(this);
 
         CardLocationDragStart = null;
 
@@ -414,7 +354,7 @@
         DiceMatchRuleLocationPayload = location;
     }
 
-    private async Task HandleDiceRuleDragStop(DiceMatchRuleLocation location)
+    private void HandleDiceRuleDragStop(DiceMatchRuleLocation location)
     {
         if (DiceMatchRuleLocationPayload == null)
             return;
@@ -425,8 +365,6 @@
         CardLocationDragStart = null;
 
         OnDiceMatchRuleMoved(DiceMatchRuleLocationPayload.Value, location);
-
-        await DiceMatchRuleMoved.InvokeAsync(this);
 
         DiceMatchRuleLocationPayload = null;
 

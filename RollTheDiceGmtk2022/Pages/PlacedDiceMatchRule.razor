@@ -1,0 +1,39 @@
+﻿@using RollTheDiceGmtk2022.Game
+
+@if (Rule == null)
+{
+    if (Location.HasValue)
+    {
+        <span class="dice-match-rule-slot" ondragover="event.preventDefault();" @ondrop="@(() => OnDragStop(Location.Value))"></span>
+    }
+    else
+    {
+        <span class="dice-match-rule-slot"></span>
+    }
+}
+else
+{
+    if (Location.HasValue)
+    {
+        <span class="dice-match-rule-slot" draggable="true" @ondragstart="@(() => OnDragStart(Location.Value))" ondragover="event.preventDefault();" @ondrop="@(() => OnDragStop(Location.Value))">@Rule</span>
+    }
+    else
+    {
+          <span class="dice-match-rule-slot">@Rule</span>
+    
+    }
+}
+
+@code {
+	[Parameter]
+    public DiceMatchRule? Rule { get; set; }
+
+    [Parameter]
+    public DiceMatchRuleLocation? Location{ get; set; }
+
+    [Parameter]
+    public Action<DiceMatchRuleLocation> OnDragStart { get; set; }
+
+    [Parameter]
+    public Action<DiceMatchRuleLocation> OnDragStop { get; set; }
+}

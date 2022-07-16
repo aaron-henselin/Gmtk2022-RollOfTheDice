@@ -46,6 +46,7 @@ namespace RollTheDiceGmtk2022.Game
     public class KnownCardDefinitions
     {
         public static CardDefinition Rogue = new CardDefinition {
+            Name = "Rogue",
             Hp = 25,
             Slots = new List<SlotDefinition> {
                 new SlotDefinition {
@@ -60,6 +61,7 @@ namespace RollTheDiceGmtk2022.Game
 
         public static CardDefinition Archer = new CardDefinition
         {
+            Name = "Archer",
             Hp = 50,
             Slots = new List<SlotDefinition> {
                 new SlotDefinition {
@@ -73,6 +75,7 @@ namespace RollTheDiceGmtk2022.Game
         };
         public static CardDefinition Paladin = new CardDefinition
         {
+            Name = "Paladin",
             Hp = 100,
             Slots = new List<SlotDefinition> {
                 new SlotDefinition {
@@ -85,6 +88,7 @@ namespace RollTheDiceGmtk2022.Game
         };
         public static CardDefinition Cleric = new CardDefinition
         {
+            Name = "Cleric",
             Hp = 50,
             Slots = new List<SlotDefinition> {
                 new SlotDefinition {
@@ -98,6 +102,7 @@ namespace RollTheDiceGmtk2022.Game
 
         public static CardDefinition PlagueRats = new CardDefinition
         {
+            Name = "Plague Rats",
             Hp = 50,
             Slots = new List<SlotDefinition> {
                 new SlotDefinition {

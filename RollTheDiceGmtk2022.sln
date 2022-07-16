@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RollTheDiceGmtk2022", "Roll
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RollTheDiceGmtk2022.Test", "RollTheDiceGmtk2022.Test\RollTheDiceGmtk2022.Test.csproj", "{5189DBD2-5B42-41A4-82AF-F91255936EDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RollTheDiceGmtk2022Logic", "RollTheDiceGmtk2022Logic\RollTheDiceGmtk2022Logic.csproj", "{58D76B5F-EE79-47EB-8A22-289DC045C3C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RollTheDiceGmtk2022Logic", "RollTheDiceGmtk2022Logic\RollTheDiceGmtk2022Logic.csproj", "{58D76B5F-EE79-47EB-8A22-289DC045C3C1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RollTheDiceGmtk2022SolutionInjestor", "RollTheDiceGmtk2022SolutionInjestor\RollTheDiceGmtk2022SolutionInjestor.csproj", "{42FC5C01-48D5-4526-8BF1-C4BB25861758}"
 EndProject
