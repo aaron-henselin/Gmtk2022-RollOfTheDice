@@ -14,7 +14,7 @@
             </div>
 
             <div class="col-9">
-                <div class="card-hand">
+                <div class="card-columns card-hand">
                     @for (var i = 0; i < Oracle.Count; i++)
                     {
                         var oracle = Oracle[i];
@@ -28,7 +28,7 @@
                                     <span class="dice-match-rule">@oracle</span>
                                 </div>
 
-                                <select @onchange="@(args => HandleCardSelection(cardLocation, args.Value))">
+                                <select class="card-selection" @onchange="@(args => HandleCardSelection(cardLocation, args.Value))">
                                     <option>Choose a Card</option>
 
                                     @foreach (var cardDefinition in ThisScenario.AllowedCardDefinitions)
@@ -275,9 +275,31 @@
         this.StateHasChanged();
     }
 
+    private void ReturnDiceMatchRuleToDashboard(DiceMatchRule rule)
+    {
+        for (var i = 0; i < DiceMatchRuleDashboard.Count; i++)
+        {
+            if (DiceMatchRuleDashboard[i] == null)
+            {
+                DiceMatchRuleDashboard[i] = rule;
+                return;
+            }
+        }
+
+        throw new Exception("No empty spots");
+    }
+
     private void HandleRemove(CardLocation cardLocation)
     {
+        var cardToRemove = PlacedCards[cardLocation.CollectionIndex];
+
         PlacedCards[cardLocation.CollectionIndex] = null;
+
+        foreach (var slot in cardToRemove.Slots)
+        {
+            if (slot.Rule.HasValue)
+                ReturnDiceMatchRuleToDashboard(slot.Rule.Value);
+        }
 
         this.StateHasChanged();
     }

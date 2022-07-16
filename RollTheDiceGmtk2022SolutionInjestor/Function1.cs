@@ -19,7 +19,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using RollTheDiceGmtk2022.Game;
 using RollTheDiceGmtk2022Logic;
-
+[assembly:WebJobsStartup(typeof(RollTheDiceGmtk2022SolutionInjestor.InjestorStartup))]
 namespace RollTheDiceGmtk2022SolutionInjestor
 {
     public class Function1
