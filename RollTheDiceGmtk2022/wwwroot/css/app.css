@@ -121,6 +121,22 @@ h3 {
     letter-spacing: 1.5px;
 }
 
+button.close.remove-card {
+    border-radius: 5px;
+    border: 1px solid black;
+    width: 26px;
+    position: absolute;
+    top: -25px;
+    right: -15px;
+    opacity: 1;
+    background-color: black;
+    color: red;
+}
+
+button.close.remove-card span {
+    margin-top: -2px;
+}
+
 .dice-match-rule {
     display: inline-block;
     color: #fff;

@@ -44,7 +44,7 @@
                         }
                         else
                         {
-                            <PlacedCard Card="@card" Location="@cardLocation" OnDragStart="@HandleCardDragStart" OnDragStop="@HandleCardDragStop" OnDiceMatchRuleDragStart="@HandleDiceRuleDragStart" OnDiceMatchRuleDragStop="@HandleDiceRuleDragStop"></PlacedCard>
+                            <PlacedCard Card="@card" Location="@cardLocation" OnRemove="@HandleRemove" OnDragStart="@HandleCardDragStart" OnDragStop="@HandleCardDragStop" OnDiceMatchRuleDragStart="@HandleDiceRuleDragStart" OnDiceMatchRuleDragStop="@HandleDiceRuleDragStop"></PlacedCard>
                         }
                     }
                 </div>
@@ -135,24 +135,6 @@
         {
             PlacedCards.Add(i, null);
         }
-
-        //for (var i = 0; i < 4; i++)
-        //{
-        //    CardDefinition useDefinition = null;
-        //    if (i == 0)
-        //        useDefinition = KnownCardDefinitions.Rogue;
-        //    if (i == 1)
-        //        useDefinition = KnownCardDefinitions.Archer;
-        //    if (i == 2)
-        //        useDefinition = KnownCardDefinitions.Paladin;
-        //    if (i == 3)
-        //        useDefinition = KnownCardDefinitions.Cleric;
-
-        //    var card = new Card(useDefinition, i);
-        //    PlacedCards.Add(i, card);
-        //}
-        ////PlacedCards.Add(3, null);
-        //PlacedCards.Add(4, null);
 
         EnemyCard = ThisScenario.EnemyCard;
 
@@ -256,6 +238,13 @@
         var newCardId = nonNullCards.Any() ? nonNullCards.Max(x => x.Id) + 1 : 1;
 
         PlacedCards[cardLocation.CollectionIndex] = new Card(cardDefinition, newCardId);
+
+        this.StateHasChanged();
+    }
+
+    private void HandleRemove(CardLocation cardLocation)
+    {
+        PlacedCards[cardLocation.CollectionIndex] = null;
 
         this.StateHasChanged();
     }
