@@ -19,7 +19,11 @@
     }
 
     .card {
-        min-width: 300px;
+        width: 300px;
+        min-width:300px;
+        min-height: 395px;
+        background: url("card_back.png");
+        background-size:100%;
     }
 
     .card-deck .card:first-child {
@@ -30,8 +34,23 @@
         margin-right: 0;
     }
 
+    .card.missing-card{
+        background:url("door.png")
+    }
+
     .card.missing-card:after {
         content: 'Place a card';
+    }
+
+    .card-header{
+        background:url("cardheader.png");
+        height: 85px;
+    }
+
+    .card-header-name{
+        font-family: 'Heorot';
+        font-size: 250%;
+        color:#EE9463;
     }
 
     .hp {
