@@ -2,6 +2,13 @@
 @using RollTheDiceGmtk2022Logic
 
 <div class="card" draggable="true" @ondragstart="@(() => HandleDragStart(Location))" ondragover="event.preventDefault();" @ondrop="@(() => HandleDragStop(Location))">
+    @if (!IsEnemy)
+    {
+        <div class="oracle-dice-match-container">
+            <span class="dice-match-rule">@Oracle</span>
+        </div>
+    }
+
     <div class="card-header">
         <div class="row">
             @{
@@ -50,7 +57,7 @@
 
 @code {
     [Parameter]
-    public Scenario Scenario { get; set; }
+    public DiceMatchRule Oracle { get; set; }
 
     [Parameter]
     public Card Card { get; set; }

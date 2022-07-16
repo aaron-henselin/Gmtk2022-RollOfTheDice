@@ -8,30 +8,26 @@
 
 <div class="container-fluid">
     <div class="board mt-5">
-        <h3>Oracle</h3>
-
-        <div class="mb-2">
-            @foreach (var oracleDiceMatchRule in Oracle)
-            {
-                <span class="dice-match-rule oracle-dice-match-rule">@oracleDiceMatchRule</span>
-            }
-        </div>
-
         <div class="row">
             <div class="col-3">
                 <PlacedCard Card="@EnemyCard" IsEnemy="@true"></PlacedCard>
             </div>
 
             <div class="col-9">
-                <div class="card-deck">
+                <div class="card-hand">
                     @for (var i = 0; i < Oracle.Count; i++)
                     {
+                        var oracle = Oracle[i];
                         var card = PlacedCards[i];
                         var cardLocation = new CardLocation(true, i);
 
                         if (card == null)
                         {
                             <div class="card missing-card" ondragover="event.preventDefault();" @ondrop="@(() => HandleCardDragStop(cardLocation))">
+                                <div class="oracle-dice-match-container">
+                                    <span class="dice-match-rule">@oracle</span>
+                                </div>
+
                                 <select @onchange="@(args => HandleCardSelection(cardLocation, args.Value))">
                                     <option>Choose a Card</option>
 
@@ -44,7 +40,7 @@
                         }
                         else
                         {
-                            <PlacedCard Card="@card" Location="@cardLocation" OnRemove="@HandleRemove" OnDragStart="@HandleCardDragStart" OnDragStop="@HandleCardDragStop" OnDiceMatchRuleDragStart="@HandleDiceRuleDragStart" OnDiceMatchRuleDragStop="@HandleDiceRuleDragStop"></PlacedCard>
+                            <PlacedCard Oracle="@oracle" Card="@card" Location="@cardLocation" OnRemove="@HandleRemove" OnDragStart="@HandleCardDragStart" OnDragStop="@HandleCardDragStop" OnDiceMatchRuleDragStart="@HandleDiceRuleDragStart" OnDiceMatchRuleDragStop="@HandleDiceRuleDragStop"></PlacedCard>
                         }
                     }
                 </div>
@@ -81,7 +77,7 @@
 @if (histogramDataPoints != null)
 {
     <pre>
-        foreach (var point in histogramDataPoints)
+        @foreach (var point in histogramDataPoints)
         {
             <text>@point.Turns</text>
         }
