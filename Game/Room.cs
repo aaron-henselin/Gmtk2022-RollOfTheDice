@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace RollTheDiceGmtk2022.Game
 {
+    
+
+
     public class Room
     {
         public RoomType RoomType { get; }
