@@ -67,6 +67,8 @@
                     @foreach (var kvp in PlacedCards)
                     {
                         var card = kvp.Value;
+                        if (card == null)
+                            continue;
 
                         <div class="cardx">
                             <div class="card-top">
@@ -189,8 +191,11 @@
 
             //PlacedCards.Add(i, null); //todo
         }
+        PlacedCards.Add(3, null);
+        PlacedCards.Add(4, null);
 
-        BlazorTimer.SetTimer(500);
+
+        BlazorTimer.SetTimer(1000);
         BlazorTimer.OnElapsed += SimulationTick;
 
     }
@@ -250,12 +255,17 @@
         isRunning = false;
     }
 
+    object gsLock = new object();
     private void SimulationTick()
     {
         if (isRunning && !gs.IsGameEnded){
             try
             {
-                gs.AdvanceGameState();
+                lock (gsLock)
+                {
+                    gs.AdvanceGameState();    
+                }
+
             }
             catch (Exception ex)
             {
