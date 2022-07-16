@@ -12,7 +12,8 @@ namespace RollTheDiceGmtk2022.Game
         {
             var previouslyActiveCard = ActiveCard;
             Cards.RemoveAt(0);
-            Cards.Add(previouslyActiveCard);
+            if (!previouslyActiveCard.IsDead)
+                Cards.Add(previouslyActiveCard);
         }
     }
 
