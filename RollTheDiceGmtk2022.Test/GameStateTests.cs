@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RollTheDiceGmtk2022.Game;
+using RollTheDiceGmtk2022Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,8 @@ namespace RollTheDiceGmtk2022.Test
                 placedCards.Add(3, null);
                 placedCards.Add(4, null);
 
-                var gs = new GameState();
+                var registrar = new ScenarioRegistrar();
+                var gs = new GameState(registrar.Scenarios[0],placedCards);
                 gs.DiceOracle = new List<DiceMatchRule> { DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Even };
                 gs.PlayerHand = new CardHand(placedCards);
 
