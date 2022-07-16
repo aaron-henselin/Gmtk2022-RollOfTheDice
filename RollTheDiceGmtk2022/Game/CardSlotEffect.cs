@@ -26,6 +26,6 @@
 
     public enum CardSlotEffectType
     {
-        Attack, Heal, Evade,ShieldWall,DamageBuff
+        Attack, Heal, Evade,ShieldWall,DamageBuff, Command
     }
 }

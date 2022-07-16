@@ -29,6 +29,8 @@ namespace RollTheDiceGmtk2022.Game
 
         public List<decimal> DamageBuffs = new List<decimal>();
 
+        public int ShieldWallCount { get; set; } = 0;
+
         public bool IsDead => Hp <= 0;
     }
 
