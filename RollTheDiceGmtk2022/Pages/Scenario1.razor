@@ -26,20 +26,33 @@
         height: 150px;
     }
 
-    .card-slot {
-        border-top: 1px solid lightgray;
-        height: 50px
+    .draggable-dice-match-rule-receiver {
+        border-radius: .25rem;
+        border-style: solid;
+        border-width: 1px;
+        display: inline-block;
+        height: 18px;
+        width: 50px;
     }
 
-    .card-slot-rule-container {
-        height: 50px;
-        background-color: lightgray;
+    .card .draggable-dice-match-rule-receiver {
+        margin-top: 15px;
+    }
+
+    .draggable-dice-match-rule-receiver + .draggable-dice-match-rule-receiver {
+        margin-left: 10px;
+    }
+
+    .draggable-dice-match-rule-receiver:empty {
+        position: relative;
+        top: -1px;
     }
 
     .draggable-dice-match-rule {
-        border: 1px solid red;
-        width: 35px;
-        display: inline;
+        height: 18px;
+        position: relative;
+        top: -5px;
+        width: 50px;
     }
 
     #app {
@@ -63,62 +76,62 @@
             </div>
 
             <div class="col-9">
-                <div class="mb-3">
+                <div class="card-deck">
                     @foreach (var kvp in PlacedCards)
                     {
                         var card = kvp.Value;
+
                         if (card == null)
                             continue;
 
-                        <div class="cardx">
-                            <div class="card-top">
-                                <div>Id: @card.Id</div>
-                                <div>Hp: @card.Hp</div>
+                        <div class="card">
+                            <div class="card-header text-right">
+                                <span class="badge badge-success">@card.Hp</span>
                             </div>
 
-                            <div class="card-bottom">
+                            <ul class="list-group list-group-flush">
                                 @for (var i = 0; i < card.Slots.Count; i++)
                                 {
                                     var slot = card.Slots[i];
                                     var rule = slot.Rule;
                                     var diceMatchRuleLocation = new DiceMatchRuleLocation(false, kvp.Key, i);
 
-                                    <div class="card-slot">
+                                    <li class="list-group-item">
                                         <div class="row">
-                                            <div class="col-3">
-                                                <div class="card-slot-rule-container" ondragover="event.preventDefault();" @ondrop="@(() => HandleDiceRuleDragStop(diceMatchRuleLocation))">
+                                            <div class="col-4 border-right">
+                                                <span class="bg-white border-primary draggable-dice-match-rule-receiver" ondragover="event.preventDefault();" @ondrop="@(() => HandleDiceRuleDragStop(diceMatchRuleLocation))">
                                                     @if (rule != null)
                                                     {
-                                                        <div class="draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(diceMatchRuleLocation))">@rule.Value</div>
+                                                        <span class="badge badge-primary draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(diceMatchRuleLocation))">@rule.Value</span>
                                                     }
-                                                </div>
+                                                </span>
                                             </div>
 
-                                            <div class="col-9">
-                                                @slot.Effect.Name (@slot.Effect.Type.ToString() : @slot.Effect.Amount)
+                                            <div class="col-8">
+                                                <div><strong>@slot.Effect.Name</strong></div>
+                                                <div>@slot.Effect.Type.ToString() : @slot.Effect.Amount</div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </li>
                                 }
-                            </div>
+                            </ul>
                         </div>
                     }
                 </div>
-                <div>
-                    <div class="draggable-rules-dashboard">
-                        @foreach (var kvp in DiceMatchRuleDashboard)
-                        {
-                            var rule = kvp.Value;
-                            var diceMatchRuleLocation = new DiceMatchRuleLocation(true, kvp.Key);
 
-                            <div class="card-slot-rule-container" ondragover="event.preventDefault();" @ondrop="@(() => HandleDiceRuleDragStop(diceMatchRuleLocation))">
-                                @if (rule != null)
-                                {
-                                    <div class="draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(diceMatchRuleLocation))">@rule.Value</div>
-                                }
-                            </div>
-                        }
-                    </div>
+                <div class="mt-2 p-2">
+                    @foreach (var kvp in DiceMatchRuleDashboard)
+                    {
+                        var rule = kvp.Value;
+                        var diceMatchRuleLocation = new DiceMatchRuleLocation(true, kvp.Key);
+
+                        <span class="bg-white border-primary draggable-dice-match-rule-receiver" ondragover="event.preventDefault();" @ondrop="@(() => HandleDiceRuleDragStop(diceMatchRuleLocation))">
+                            @if (rule != null)
+                            {
+                                <span class="badge badge-primary draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(diceMatchRuleLocation))">@rule.Value</span>
+                            }
+                        </span>
+                    }
                 </div>
             </div>
         </div>
