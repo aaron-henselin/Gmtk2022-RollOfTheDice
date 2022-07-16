@@ -32,7 +32,24 @@ namespace RollTheDiceGmtk2022.Game
 
         public bool IsGameEnded => IsEnemyCardDefeated || IsPlayerHandDefeated;
 
-        public bool AdvanceGameState()
+        public GameOutcome AdvanceGameStateUntilCompletion(int timeout)
+        {
+            while (!IsGameEnded && timeout > 0)
+            {
+                AdvanceGameStateOneTick();
+                timeout--;
+            }
+
+            return new GameOutcome {
+                IsDraw = !IsGameEnded,
+                Won = IsEnemyCardDefeated,
+                EndingTurn = timer.TurnNumber,
+                AllPartyMembersSurvived = !PlayerHand.Cards.Any(x => x.Value != null && x.Value.IsDead)
+            };
+
+        }
+
+        public bool AdvanceGameStateOneTick()
         {
             var thisOracle = DiceOracle[timer.DiceIndex];
            
@@ -112,6 +129,30 @@ namespace RollTheDiceGmtk2022.Game
 
 
     }
+
+    public class GameOutcomeProbability
+    {
+        public GameOutcomeProbability(List<GameOutcome> outcomes)
+        {
+            var totalOutcomeCount = outcomes.Count;
+            IsDraw = outcomes.Count(x => x.IsDraw) / (decimal)totalOutcomeCount;
+            Won = outcomes.Count(x => x.Won) / (decimal)totalOutcomeCount;
+            AllPartyMembersSurvived = outcomes.Count(x => x.AllPartyMembersSurvived) / (decimal)totalOutcomeCount;
+        }
+
+        public decimal IsDraw { get; set; }
+        public decimal Won { get; set; }
+        public decimal AllPartyMembersSurvived { get; set; }
+    }
+
+    public class GameOutcome
+    {
+        public bool IsDraw { get; set; }
+        public int EndingTurn { get; set; }
+        public bool Won { get; set; }
+        public bool AllPartyMembersSurvived { get; internal set; }
+    }
+
 
 
 }

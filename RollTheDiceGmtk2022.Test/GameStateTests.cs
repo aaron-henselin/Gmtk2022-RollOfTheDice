@@ -55,7 +55,7 @@ namespace RollTheDiceGmtk2022.Test
                 gs.EnemyCard.Slots[0].Rule = DiceMatchRule.Odd;
 
                 while (!gs.IsGameEnded)
-                    gs.AdvanceGameState();
+                    gs.AdvanceGameStateOneTick();
 
             }
         }

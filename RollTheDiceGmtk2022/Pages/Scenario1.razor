@@ -133,6 +133,8 @@
     <button id="run-button" @onclick="@(() => StopSimulation())">STOP</button>    
 }
 
+<OutcomePrediction Outcome=@ExpectedOutcome></OutcomePrediction>
+
 <pre>
 ********************* DEBUG *********************
 @if (this.gs != null)
@@ -229,13 +231,22 @@
         this.StateHasChanged();
     }
 
+
+
     GameState gs;
     bool isRunning;
     public void RunSimulation()
     {
-        gs = new GameState();
-        gs.DiceOracle = new List<DiceMatchRule> { DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Even };
-        gs.PlayerHand = new CardHand(this.PlacedCards);
+        gs = BuildUpGameState();
+
+        isRunning = true;
+    }
+
+    private GameState BuildUpGameState()
+    {
+        var gs2 = new GameState();
+        gs2.DiceOracle = new List<DiceMatchRule> { DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Even };
+        gs2.PlayerHand = new CardHand(this.PlacedCards);
 
         var effect = new CardSlotEffect();
         effect.Type = CardSlotEffectType.Attack;
@@ -244,11 +255,11 @@
 
         var def = new CardDefinition();
         def.Name = "Enemy Rogue";
-        def.Hp=250;
+        def.Hp=80;
         def.Slots.Add(new SlotDefinition{ Name = "Backstab",Effect=effect});
-        gs.EnemyCard =  new Card(def, 999);
+        gs2.EnemyCard =  new Card(def, 999);
 
-        isRunning = true;
+        return gs2;
     }
 
     public void StopSimulation()
@@ -256,15 +267,29 @@
         isRunning = false;
     }
 
+    GameOutcomeProbability ExpectedOutcome { get; set; }
     object gsLock = new object();
     private void SimulationTick()
     {
+        if (!isRunning)
+        {
+            List<GameOutcome> allOutcomes = new List<GameOutcome>();
+            for (var i = 0; i < 5; i++)
+            {
+                var gs = BuildUpGameState();
+                var thisOutcome = gs.AdvanceGameStateUntilCompletion(50);
+                allOutcomes.Add(thisOutcome);
+            }
+            ExpectedOutcome = new GameOutcomeProbability(allOutcomes);
+
+        }
+
         if (isRunning && !gs.IsGameEnded){
             try
             {
                 lock (gsLock)
                 {
-                    gs.AdvanceGameState();    
+                    gs.AdvanceGameStateOneTick();    
                 }
 
             }

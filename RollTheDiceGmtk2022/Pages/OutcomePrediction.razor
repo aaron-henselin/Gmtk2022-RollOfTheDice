@@ -1,0 +1,15 @@
+﻿@using RollTheDiceGmtk2022.Game
+@if (Outcome != null)
+{
+    <h3>Prediction</h3>
+    <h3>Won: @Outcome.Won.ToString("P")</h3>
+    <h3>IsDraw: @Outcome.IsDraw.ToString("P")</h3>
+    <h3>AllPartyMembersSurvived: @Outcome.AllPartyMembersSurvived.ToString("P")</h3>    
+}
+
+@code {
+
+    [Parameter]
+    public GameOutcomeProbability Outcome { get; set; }
+
+}
