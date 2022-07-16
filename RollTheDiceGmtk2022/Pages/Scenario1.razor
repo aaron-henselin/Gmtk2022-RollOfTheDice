@@ -12,8 +12,8 @@
         display: inline-block;
         padding: 5px;
         border-radius: 5px;
-        height: 300px;
-        width: 200px;
+        height: 200px;
+        width: 300px;
     }
 
     .card-top {
@@ -79,14 +79,15 @@
                                 {
                                     var slot = card.Slots[i];
                                     var rule = slot.Rule;
+                                    var diceMatchRuleLocation = new DiceMatchRuleLocation(false, kvp.Key, i);
 
                                     <div class="card-slot">
                                         <div class="row">
                                             <div class="col-3">
-                                                <div class="card-slot-rule-container" @ondrop="@(() => HandleDiceRuleDragStop(new DiceMatchRuleLocation(false, kvp.Key, i)))">
+                                                <div class="card-slot-rule-container" ondragover="event.preventDefault();" @ondrop="@(() => HandleDiceRuleDragStop(diceMatchRuleLocation))">
                                                     @if (rule != null)
                                                     {
-                                                        <div class="draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(new DiceMatchRuleLocation(true, kvp.Key)))">@rule.Value</div>
+                                                        <div class="draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(diceMatchRuleLocation))">@rule.Value</div>
                                                     }
                                                 </div>
                                             </div>
@@ -106,11 +107,12 @@
                         @foreach (var kvp in DiceMatchRuleDashboard)
                         {
                             var rule = kvp.Value;
+                            var diceMatchRuleLocation = new DiceMatchRuleLocation(true, kvp.Key);
 
-                            <div class="card-slot-rule-container" @ondrop="@(() => HandleDiceRuleDragStop(new DiceMatchRuleLocation(true, kvp.Key)))">
+                            <div class="card-slot-rule-container" ondragover="event.preventDefault();" @ondrop="@(() => HandleDiceRuleDragStop(diceMatchRuleLocation))">
                                 @if (rule != null)
                                 {
-                                    <div class="draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(new DiceMatchRuleLocation(true, kvp.Key)))">@rule.Value</div>
+                                    <div class="draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(diceMatchRuleLocation))">@rule.Value</div>
                                 }
                             </div>
                         }
@@ -260,33 +262,41 @@
                 gs.Log.Add(ex.Message);    
                 gs.Log.Add(ex.StackTrace);
             }
-            
+
             this.StateHasChanged();
         }
     }
 
     public void OnDiceMatchRuleMoved(DiceMatchRuleLocation src, DiceMatchRuleLocation dest)
     {
-        DiceMatchRule rule;
+        var srcRule = GetDiceMatchRuleByLocation(src);
+        var destRule = GetDiceMatchRuleByLocation(dest);
 
-        if (src.InDashboard)
+        SetDiceMatchRuleByLocation(src, destRule);
+        SetDiceMatchRuleByLocation(dest, srcRule);
+    }
+
+    private DiceMatchRule? GetDiceMatchRuleByLocation(DiceMatchRuleLocation location)
+    {
+        if (location.InDashboard)
         {
-            rule = DiceMatchRuleDashboard[src.CollectionIndex].Value;
-            DiceMatchRuleDashboard[src.CollectionIndex] = null;
+            return DiceMatchRuleDashboard[location.CollectionIndex];
         }
         else
         {
-            rule = PlacedCards[src.CollectionIndex].Slots[src.SlotIndex].Rule.Value;
-            PlacedCards[src.CollectionIndex].Slots[src.SlotIndex].Rule = null;
+            return PlacedCards[location.CollectionIndex].Slots[location.SlotIndex].Rule;
         }
+    }
 
-        if (src.InDashboard)
+    private void SetDiceMatchRuleByLocation(DiceMatchRuleLocation location, DiceMatchRule? rule)
+    {
+        if (location.InDashboard)
         {
-            DiceMatchRuleDashboard[src.CollectionIndex] = rule;
+            DiceMatchRuleDashboard[location.CollectionIndex] = rule;
         }
         else
         {
-            PlacedCards[src.CollectionIndex].Slots[src.SlotIndex].Rule = rule;
+            PlacedCards[location.CollectionIndex].Slots[location.SlotIndex].Rule = rule;
         }
     }
 
@@ -304,6 +314,8 @@
         OnDiceMatchRuleMoved(DiceMatchRuleLocationPayload.Value, location);
 
         await DiceMatchRuleMoved.InvokeAsync(this);
+
+        this.StateHasChanged();
     }
 }
 
