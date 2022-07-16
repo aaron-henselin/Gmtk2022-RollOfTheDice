@@ -7,8 +7,9 @@
         border: 1px solid gray;
     }
 
-    .card{
+    .cardx{
         border: 1px solid lightgray;
+        display: inline-block;
         padding: 5px;
         border-radius: 5px;
         height: 300px;
@@ -31,7 +32,17 @@
     }
 
     .card-slot-rule-container {
+        
+    }
 
+    .draggable-dice-match-rule {
+        border: 1px solid red;
+        width: 35px;
+        display: inline;
+    }
+
+    #app {
+        width: 1280px;
     }
 </style>
 
@@ -43,7 +54,7 @@
 <button id="run-button" @onclick="@(() => RunSimulation())"></button>
 
 
-<div class="container">
+<div class="container-fluid">
     <div class="board">
         <div class="row">
             <div class="col-3">
@@ -52,22 +63,30 @@
 
             <div class="col-9">
                 <div class="mb-3">
-                    @foreach (var card in PlacedCards.Values)
+                    @foreach (var kvp in PlacedCards)
                     {
-                        <div class="card">
+                        var card = kvp.Value;
+
+                        <div class="cardx">
                             <div class="card-top">
                                 <div>Id: @card.Id</div>
                                 <div>Hp: @card.Hp</div>
                             </div>
 
                             <div class="card-bottom">
-                                @foreach (var slot in card.Slots)
+                                @for (var i = 0; i < card.Slots.Count; i++)
                                 {
+                                    var slot = card.Slots[i];
+                                    var rule = slot.Rule;
+
                                     <div class="card-slot">
                                         <div class="row">
                                             <div class="col-3">
-                                                <div class="card-slot-rule-container">
-
+                                                <div class="card-slot-rule-container" @ondrop="@(() => HandleDiceRuleDragStop(new DiceMatchRuleLocation(false, kvp.Key, i)))">
+                                                    @if (rule != null)
+                                                    {
+                                                        <div class="draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(new DiceMatchRuleLocation(true, kvp.Key)))">@rule.Value</div>
+                                                    }
                                                 </div>
                                             </div>
 
@@ -82,10 +101,17 @@
                     }
                 </div>
                 <div>
-                    <div class="draggable-rules-container">
-                        @foreach (var x in y)
+                    <div class="draggable-rules-dashboard">
+                        @foreach (var kvp in DiceMatchRuleDashboard)
                         {
-                            <div class="draggable-rule" draggable="true" @ondragstart="@(() => HandleDragStart(number))"></div>
+                            var rule = kvp.Value;
+
+                            <div class="card-slot-rule-container" @ondrop="@(() => HandleDiceRuleDragStop(new DiceMatchRuleLocation(true, kvp.Key)))">
+                                @if (rule != null)
+                                {
+                                    <div class="draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(new DiceMatchRuleLocation(true, kvp.Key)))">@rule.Value</div>
+                                }
+                            </div>
                         }
                     </div>
                 </div>
@@ -125,6 +151,7 @@
     Dictionary<int,Card> PlacedCards = new Dictionary<int,Card>();
     Dictionary<int,DiceMatchRule?> DiceMatchRuleDashboard = new Dictionary<int,DiceMatchRule?>();
 
+    public DiceMatchRuleLocation? DiceMatchRuleLocationPayload { get; set; }
 
     protected override void OnInitialized()
     {
