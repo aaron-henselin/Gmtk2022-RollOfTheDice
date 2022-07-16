@@ -155,7 +155,7 @@
     List<HistogramDataPoint> histogramDataPoints;
     protected async override Task OnInitializedAsync()
     {
-        histogramDataPoints = await HttpClient.GetFromJsonAsync<List<HistogramDataPoint>>("api/Histogram");
+        histogramDataPoints = await HttpClient.GetFromJsonAsync<List<HistogramDataPoint>>("api/Histogram?scenario=0");
 
         await base.OnInitializedAsync();
     }

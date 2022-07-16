@@ -96,6 +96,11 @@ h3 {
 
 .card-selection {
     margin-top: 75px;
+    background-color: black;
+    color: white;
+    text-transform: uppercase;
+    padding: 2px;
+    letter-spacing: 1px;
 }
 
 .card-columns.card-hand .card {
