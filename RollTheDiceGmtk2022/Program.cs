@@ -18,7 +18,8 @@ namespace RollTheDiceGmtk2022
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            
             builder.Services.AddTransient<BlazorTimer>();
 
             builder.Services.AddScoped(sp =>
@@ -30,6 +31,8 @@ namespace RollTheDiceGmtk2022
                 client.DefaultRequestHeaders.Add("x-functions-key", "V67cH-r1VRejKunHd5xjw1aTZen7zpppyUrzUNErL3baAzFuoLzwUA==");
                 return client;
             });
+
+
 
             await builder.Build().RunAsync();
         }

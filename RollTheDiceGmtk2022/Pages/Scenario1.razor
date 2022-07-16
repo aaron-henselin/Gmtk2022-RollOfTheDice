@@ -14,7 +14,7 @@
             </div>
 
             <div class="col-9">
-                <div class="card-hand">
+                <div class="card-columns card-hand">
                     @for (var i = 0; i < Oracle.Count; i++)
                     {
                         var oracle = Oracle[i];
@@ -28,7 +28,7 @@
                                     <span class="dice-match-rule">@oracle</span>
                                 </div>
 
-                                <select @onchange="@(args => HandleCardSelection(cardLocation, args.Value))">
+                                <select class="card-selection" @onchange="@(args => HandleCardSelection(cardLocation, args.Value))">
                                     <option>Choose a Card</option>
 
                                     @foreach (var cardDefinition in ThisScenario.AllowedCardDefinitions)
@@ -62,6 +62,8 @@
             </div>
         </div>
     </div>
+
+    <div id="histogram" class="mt-2"></div>
 </div>
 
 
@@ -107,6 +109,7 @@
 @inject HttpClient HttpClient
 @inject BlazorTimer BlazorTimer
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 @code
 {
     ScenarioRegistrar scenarioRegistrar = new ScenarioRegistrar();
@@ -147,9 +150,6 @@
 
         BlazorTimer.SetTimer(500);
         BlazorTimer.OnElapsed += SimulationTick;
-
-
-
     }
 
     List<HistogramDataPoint> histogramDataPoints;
@@ -158,6 +158,13 @@
         histogramDataPoints = await HttpClient.GetFromJsonAsync<List<HistogramDataPoint>>("api/Histogram");
 
         await base.OnInitializedAsync();
+    }
+
+
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeAsync<string>("buildHistogram");
     }
 
 
@@ -218,6 +225,8 @@
 
     GameOutcomeProbability ExpectedOutcome { get; set; }
     object gsLock = new object();
+
+    int? bestRecord = null;
     private void SimulationTick()
     {
         if (!isRunning)
@@ -229,8 +238,16 @@
                 var thisOutcome = gs.AdvanceGameStateUntilCompletion(50);
                 allOutcomes.Add(thisOutcome);
             }
-            ExpectedOutcome = new GameOutcomeProbability(allOutcomes);
 
+            if (ExpectedOutcome.Won > .9m)
+            {
+                var fastest = allOutcomes.Min(x => x.EndingTurn);
+                if (bestRecord == null || bestRecord > fastest)
+                {
+                    HttpClient.PostAsJsonAsync("api/injest",this.PlacedCards);
+                    bestRecord = fastest;
+                }
+            }  
         }
 
         if (isRunning && !gs.IsGameEnded){
@@ -265,9 +282,31 @@
         this.StateHasChanged();
     }
 
+    private void ReturnDiceMatchRuleToDashboard(DiceMatchRule rule)
+    {
+        for (var i = 0; i < DiceMatchRuleDashboard.Count; i++)
+        {
+            if (DiceMatchRuleDashboard[i] == null)
+            {
+                DiceMatchRuleDashboard[i] = rule;
+                return;
+            }
+        }
+
+        throw new Exception("No empty spots");
+    }
+
     private void HandleRemove(CardLocation cardLocation)
     {
+        var cardToRemove = PlacedCards[cardLocation.CollectionIndex];
+
         PlacedCards[cardLocation.CollectionIndex] = null;
+
+        foreach (var slot in cardToRemove.Slots)
+        {
+            if (slot.Rule.HasValue)
+                ReturnDiceMatchRuleToDashboard(slot.Rule.Value);
+        }
 
         this.StateHasChanged();
     }
