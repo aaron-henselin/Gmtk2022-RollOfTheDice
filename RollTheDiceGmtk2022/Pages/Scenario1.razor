@@ -1,4 +1,5 @@
 ﻿@page "/1"
+
 @using RollTheDiceGmtk2022.Game
 
 <h3>
@@ -16,16 +17,40 @@
 }
 
 
-
+@inject BlazorTimer BlazorTimer
 @inject NavigationManager NavigationManager
 @code
 {
     Dictionary<int,CardDefinition> ScenarioCards = new Dictionary<int,CardDefinition>();
     Dictionary<int,Card> PlacedCards = new Dictionary<int,Card>();
 
-    private void IsPlaced(int cardId)
+    protected override void OnInitialized()
     {
-        PlacedCards.Values.Any(x => x.Id == cardId);
+        base.OnInitialized();
+
+        for (var i = 0; i < 3; i++)
+        {
+            var effect = new CardSlotEffect();
+            effect.Type = CardSlotEffectType.Attack;
+            effect.Amount = 10;
+            effect.Name = "Backstab";
+
+            var def = new CardDefinition();
+            def.Name = "Rogue";
+            def.Hp=25;
+            def.Slots.Add(new SlotDefinition{ Name = "Backstab",Effect=effect});
+            var card = new Card(def, i*50);
+            PlacedCards.Add(i, card);
+
+            //PlacedCards.Add(i, null); //todo
+        }
+
+
+    }
+
+    private bool IsPlaced(int cardId)
+    {
+        return PlacedCards.Values.Any(x => x.Id == cardId);
     }
 
     protected override void OnParametersSet()
@@ -33,26 +58,39 @@
         base.OnParametersSet();
     }
 
-    public void OnEmptyCardPlaced(CardDefinition cardDef, int cardId, int handPosition)
+    public void OnCardDefinitionPlaced(CardDefinition cardDef, int cardId, int handPosition)
     {
         var card = new Card(cardDef, cardId);
-        AvailableCards.Remove(cardDef);
         PlacedCards[handPosition] = card;
 
         this.StateHasChanged();
     }
 
-    public void OnEmptyCardPlaced(CardDefinition cardDef)
+    public void OnCardMoved(int originalPosition, int newPosition)
     {
-        var card = new Card(cardDef);
+        var originalOccupantOfNewPosition = PlacedCards[newPosition];
+        var originalOccupantOfOriginalPosition = PlacedCards[originalPosition];
+        PlacedCards[newPosition] = originalOccupantOfOriginalPosition;
+        PlacedCards[originalPosition] = originalOccupantOfNewPosition;
+
         this.StateHasChanged();
     }
 
+    bool isRunning = false;
     public void RunSimulation()
     {
         var gs = new GameState();
         
     }
+
+    private void StartTimer()
+    {
+        BlazorTimer.SetTimer(500);
+        //BlazorTimer.OnElapsed += SimulationTick;
+
+    }
+
+    
 
 }
 
