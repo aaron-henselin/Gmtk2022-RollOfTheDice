@@ -245,7 +245,7 @@
                 {
                     try
                     {
-                        var task = HttpClient.PostAsJsonAsync("api/injest", this.PlacedCards);
+                        var task = HttpClient.PostAsJsonAsync("api/injest?scenario=0", this.PlacedCards);
                         task.ConfigureAwait(false);
                         task.Start();                        
                     }
