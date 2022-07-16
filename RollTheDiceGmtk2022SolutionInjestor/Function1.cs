@@ -114,15 +114,15 @@ namespace RollTheDiceGmtk2022SolutionInjestor
         {
             var sqlQueryText = $"SELECT * FROM c WHERE c.ScenarioId = @scenarioId";
             QueryDefinition queryDefinition = new QueryDefinition(sqlQueryText);
-            queryDefinition.WithParameter("scenarioId",scenarioId);
+            queryDefinition.WithParameter("@scenarioId",scenarioId);
             return await QueryItemsAsync(queryDefinition);
         }
         public async Task<List<SavedResult>> GetSavedResultsAsync(int scenarioId, string ipAddress)
         {
             var sqlQueryText = $"SELECT * FROM c WHERE c.ScenarioId = @scenarioId and c.IpAddress = @ipAddress";
             QueryDefinition queryDefinition = new QueryDefinition(sqlQueryText);
-            queryDefinition.WithParameter("scenarioId", scenarioId);
-            queryDefinition.WithParameter("ipAddress", ipAddress);
+            queryDefinition.WithParameter("@scenarioId", scenarioId);
+            queryDefinition.WithParameter("@ipAddress", ipAddress);
             return await QueryItemsAsync(queryDefinition);
         }
 
@@ -163,12 +163,7 @@ namespace RollTheDiceGmtk2022SolutionInjestor
 
     public class InjestorStartup : IWebJobsStartup
     {
-        private readonly IConfiguration configuration;
-
-        public InjestorStartup(IConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
+        
 
         public void Configure(IWebJobsBuilder builder)
         {
@@ -179,9 +174,8 @@ namespace RollTheDiceGmtk2022SolutionInjestor
 
         public void ConfigureServices(IServiceCollection sc)
         {
-          
-            var cosmosDbConnectionString = configuration.GetConnectionString("CosmosDb");
-            sc.AddSingleton(new CosmosClient(cosmosDbConnectionString));
+            var connstring = Environment.GetEnvironmentVariable("CosmosDb");
+            sc.AddSingleton(new CosmosClient(connstring));
   
         }
     }
