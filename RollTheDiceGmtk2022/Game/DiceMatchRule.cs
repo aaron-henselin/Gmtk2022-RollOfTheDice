@@ -19,7 +19,7 @@ namespace RollTheDiceGmtk2022.Game
                 case DiceMatchRule.Even:
                     return roll % 2 == 0;
                 case DiceMatchRule.Odd:
-                    return roll % 1 == 1;
+                    return roll % 2 != 0;
                 case DiceMatchRule.High:
                     return roll > (max / 2);
                 case DiceMatchRule.Low:

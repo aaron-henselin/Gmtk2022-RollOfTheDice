@@ -39,7 +39,7 @@ namespace RollTheDiceGmtk2022.Test
                 placedCards.Add(4, null);
 
                 var gs = new GameState();
-                gs.DiceOracle = new List<DiceMatchRule> { DiceMatchRule.Even, DiceMatchRule.Even, DiceMatchRule.Even, DiceMatchRule.Even, DiceMatchRule.Even };
+                gs.DiceOracle = new List<DiceMatchRule> { DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Even };
                 gs.PlayerHand = new CardHand(placedCards);
 
                 var effect = new CardSlotEffect();

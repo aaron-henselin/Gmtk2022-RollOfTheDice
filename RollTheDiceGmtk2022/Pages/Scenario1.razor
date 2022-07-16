@@ -141,6 +141,7 @@
         IsGameEnded: @gs.IsGameEnded
         IsEnemyCardDefeated: @gs.IsEnemyCardDefeated
         IsPlayerHandDefeated: @gs.IsPlayerHandDefeated
+        Enemy HP: @gs.EnemyCard.Hp
         DiceIndex: @gs.Timer.DiceIndex
         TurnNumber: @gs.Timer.TurnNumber
     </text>
@@ -195,7 +196,7 @@
         PlacedCards.Add(4, null);
 
 
-        BlazorTimer.SetTimer(1000);
+        BlazorTimer.SetTimer(500);
         BlazorTimer.OnElapsed += SimulationTick;
 
     }
@@ -233,7 +234,7 @@
     public void RunSimulation()
     {
         gs = new GameState();
-        gs.DiceOracle = new List<DiceMatchRule> { DiceMatchRule.Even, DiceMatchRule.Even, DiceMatchRule.Even, DiceMatchRule.Even, DiceMatchRule.Even };
+        gs.DiceOracle = new List<DiceMatchRule> { DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Even };
         gs.PlayerHand = new CardHand(this.PlacedCards);
 
         var effect = new CardSlotEffect();
