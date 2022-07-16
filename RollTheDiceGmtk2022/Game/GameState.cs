@@ -19,6 +19,7 @@ namespace RollTheDiceGmtk2022.Game
 
         public List<DiceMatchRule> DiceOracle { get; set; }
         
+
         public CardHand PlayerHand { get; set; } = new CardHand();
         public Card EnemyCard { get; set; }
 
