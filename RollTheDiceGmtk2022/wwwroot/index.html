@@ -35,7 +35,6 @@
         }
 
         #app {
-            width: 660px;
             margin: auto;
         }
 
@@ -54,41 +53,8 @@
     <div id="app">Loading...</div>
 
 <div class="footer">
-    <div id="music" style="width: 300px;">
-        <div class="mt-4" id="music_prompt">
-
-            <div class="jumbotron">
-
-                <h2>Background Music</h2>
-                <i>
-                    Got a pair of ears? I recommend playing this game set to the dulcet tones of Svalbarð by Glåsbird.
-                    And then you should buy the album.
-                </i><br />
-                <b>It's really good.</b><br/>
-                                        <button id="bandcamp_launch" class="btn btn-primary btn-lg my-4" onclick="jsHelpers.startBandcamp()">Tune In 🎧</button>
-            </div>
-
-        </div>
-        <div id="bandcamp_frame" style="display: none;">
-
-        </div>
-    </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-
-    var jsHelpers = {};
-    jsHelpers.startBandcamp = function () {
-
-
-        $(music_prompt).hide();
-        var node = $('<iframe style="border: 0; width: 100%; height: 120px;" src="https://bandcamp.com/EmbeddedPlayer/album=2327617860/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/artwork=none/transparent=true/" seamless><a href="https://whitelabrecs.bandcamp.com/album/svalbar">Svalbarð by Glåsbird</a></iframe>');
-        $(bandcamp_frame).show().append(node);
-    }
-
-
-
-</script>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.

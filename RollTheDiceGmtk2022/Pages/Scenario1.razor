@@ -3,27 +3,38 @@
 @using RollTheDiceGmtk2022.Game
 
 <style>
-    .board {
-        border: 1px solid gray;
+    .oracle-dice-match-rule {
+        width: 50px;
     }
 
-    .cardx{
-        border: 1px solid lightgray;
-        display: inline-block;
-        padding: 5px;
-        border-radius: 5px;
-        height: 200px;
-        width: 300px;
+    .oracle-dice-match-rule + .oracle-dice-match-rule {
+        margin-left: 10px;
     }
 
-    .card-top {
-        
-        height: 150px;
-        text-align: center;
+    .card-deck {
+        flex-flow: row nowrap;
+        overflow-x: auto;
+        padding-bottom: 5px;
     }
 
-    .card-bottom {
-        height: 150px;
+    .card {
+        min-width: 300px;
+    }
+
+    .card-deck .card:first-child {
+        margin-left: 0;
+    }
+
+    .card-deck .card:last-child {
+        margin-right: 0;
+    }
+
+    .card.missing-card:after {
+        content: 'Place a card';
+    }
+
+    .hp {
+        font-size: 1rem;
     }
 
     .draggable-dice-match-rule-receiver {
@@ -54,25 +65,54 @@
         top: -5px;
         width: 50px;
     }
-
-    #app {
-        width: 1280px;
-    }
 </style>
 
-<h3>
-    1. A bridge (not too far)
-</h3>
-<small>Reach the banner.</small>
-
-<button id="run-button" @onclick="@(() => RunSimulation())"></button>
+<button id="run-button" @onclick="@(() => RunSimulation())">Run Simulation</button>
 
 
 <div class="container-fluid">
-    <div class="board">
+    <div class="board mt-5">
+        <h3>Oracle</h3>
+
+        <div class="mb-2">
+            @foreach (var oracleDiceMatchRule in Oracle)
+            {
+                <span class="badge badge-primary oracle-dice-match-rule">@oracleDiceMatchRule</span>
+            }
+        </div>
+
         <div class="row">
             <div class="col-3">
+                <div class="card enemy-card">
+                    <div class="card-header text-right">
+                        <span class="badge badge-danger hp">@EnemyCard.Hp</span>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @for (var i = 0; i < EnemyCard.Slots.Count; i++)
+                        {
+                            var slot = EnemyCard.Slots[i];
+                            var rule = slot.Rule;
 
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-4 border-right">
+                                        <span class="bg-white border-primary draggable-dice-match-rule-receiver">
+                                            @if (rule != null)
+                                            {
+                                                <span class="badge badge-primary draggable-dice-match-rule">@rule.Value</span>
+                                            }
+                                        </span>
+                                    </div>
+
+                                    <div class="col-8">
+                                        <div><strong>@slot.Effect.Name</strong></div>
+                                        <div>@slot.Effect.Type.ToString() : @slot.Effect.Amount</div>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
 
             <div class="col-9">
@@ -80,13 +120,17 @@
                     @foreach (var kvp in PlacedCards)
                     {
                         var card = kvp.Value;
+                        var cardLocation = new CardLocation(true, kvp.Key);
 
                         if (card == null)
+                        {
+                            <div class="card missing-card" ondragover="event.preventDefault();" @ondrop="@(() => HandleCardDragStop(cardLocation))"></div>
                             continue;
+                        }
 
-                        <div class="card">
+                        <div class="card" draggable="true" @ondragstart="@(() => HandleCardDragStart(cardLocation))" ondragover="event.preventDefault();" @ondrop="@(() => HandleCardDragStop(cardLocation))">
                             <div class="card-header text-right">
-                                <span class="badge badge-success">@card.Hp</span>
+                                <span class="badge badge-success hp">@card.Hp</span>
                             </div>
 
                             <ul class="list-group list-group-flush">
@@ -175,8 +219,14 @@
     Dictionary<int,CardDefinition> ScenarioCards = new Dictionary<int,CardDefinition>();
     Dictionary<int,Card> PlacedCards = new Dictionary<int,Card>();
     Dictionary<int,DiceMatchRule?> DiceMatchRuleDashboard = new Dictionary<int,DiceMatchRule?>();
+    List<DiceMatchRule> Oracle = new List<DiceMatchRule> { DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Even };
+    Card EnemyCard;
 
+    public CardLocation? CardLocationDragStart { get; set; }
     public DiceMatchRuleLocation? DiceMatchRuleLocationPayload { get; set; }
+
+    [Parameter]
+    public EventCallback CardMoved { get; set; }
 
     [Parameter]
     public EventCallback DiceMatchRuleMoved { get; set; }
@@ -206,8 +256,10 @@
             var card = new Card(useDefinition, i);
             PlacedCards.Add(i, card);
         }
+        //PlacedCards.Add(3, null);
         PlacedCards.Add(4, null);
 
+        EnemyCard = EnemyCardFactory.BuildPlagueRats();
 
         BlazorTimer.SetTimer(500);
         BlazorTimer.OnElapsed += SimulationTick;
@@ -256,9 +308,9 @@
     private GameState BuildUpGameState()
     {
         var gs2 = new GameState();
-        gs2.DiceOracle = new List<DiceMatchRule> { DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Even };
+        gs2.DiceOracle = Oracle;
         gs2.PlayerHand = new CardHand(this.PlacedCards);
-        gs2.EnemyCard = EnemyCardFactory.BuildPlagueRats();
+        gs2.EnemyCard = new Card(EnemyCard);
 
         return gs2;
     }
@@ -337,9 +389,27 @@
         }
     }
 
+    private void HandleCardDragStart(CardLocation location)
+    {
+        CardLocationDragStart = location;
+    }
+
+    private async Task HandleCardDragStop(CardLocation location)
+    {
+        if (CardLocationDragStart == null)
+            return;
+
+        OnCardMoved(CardLocationDragStart.Value.CollectionIndex, location.CollectionIndex);
+
+        await CardMoved.InvokeAsync(this);
+
+        CardLocationDragStart = null;
+
+        this.StateHasChanged();
+    }
+
     private void HandleDiceRuleDragStart(DiceMatchRuleLocation location)
     {
-        //Console.WriteLine($"HandleDragStart {i}");
         DiceMatchRuleLocationPayload = location;
     }
 
@@ -348,9 +418,16 @@
         if (DiceMatchRuleLocationPayload == null)
             return;
 
+        // Because our dice match rules might exist inside a card, dragging them elsewhere
+        // will tragger the actual card drag, but this drop fires first so clear the card drag start
+        // so the card drag stop does nothing.
+        CardLocationDragStart = null;
+
         OnDiceMatchRuleMoved(DiceMatchRuleLocationPayload.Value, location);
 
         await DiceMatchRuleMoved.InvokeAsync(this);
+
+        DiceMatchRuleLocationPayload = null;
 
         this.StateHasChanged();
     }
