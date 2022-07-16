@@ -8,30 +8,26 @@
 
 <div class="container-fluid">
     <div class="board mt-5">
-        <h3>Oracle</h3>
-
-        <div class="mb-2">
-            @foreach (var oracleDiceMatchRule in Oracle)
-            {
-                <span class="dice-match-rule oracle-dice-match-rule">@oracleDiceMatchRule</span>
-            }
-        </div>
-
         <div class="row">
             <div class="col-3">
                 <PlacedCard Card="@EnemyCard" IsEnemy="@true"></PlacedCard>
             </div>
 
             <div class="col-9">
-                <div class="card-deck">
+                <div class="card-hand">
                     @for (var i = 0; i < Oracle.Count; i++)
                     {
+                        var oracle = Oracle[i];
                         var card = PlacedCards[i];
                         var cardLocation = new CardLocation(true, i);
 
                         if (card == null)
                         {
                             <div class="card missing-card" ondragover="event.preventDefault();" @ondrop="@(() => HandleCardDragStop(cardLocation))">
+                                <div class="oracle-dice-match-container">
+                                    <span class="dice-match-rule">@oracle</span>
+                                </div>
+
                                 <select @onchange="@(args => HandleCardSelection(cardLocation, args.Value))">
                                     <option>Choose a Card</option>
 
@@ -44,7 +40,7 @@
                         }
                         else
                         {
-                            <PlacedCard Card="@card" Location="@cardLocation" OnDragStart="@HandleCardDragStart" OnDragStop="@HandleCardDragStop" OnDiceMatchRuleDragStart="@HandleDiceRuleDragStart" OnDiceMatchRuleDragStop="@HandleDiceRuleDragStop"></PlacedCard>
+                            <PlacedCard Oracle="@oracle" Card="@card" Location="@cardLocation" OnRemove="@HandleRemove" OnDragStart="@HandleCardDragStart" OnDragStop="@HandleCardDragStop" OnDiceMatchRuleDragStart="@HandleDiceRuleDragStart" OnDiceMatchRuleDragStop="@HandleDiceRuleDragStop"></PlacedCard>
                         }
                     }
                 </div>
@@ -78,6 +74,16 @@
 
 <OutcomePrediction Outcome=@ExpectedOutcome></OutcomePrediction>
 
+@if (histogramDataPoints != null)
+{
+    <pre>
+        @foreach (var point in histogramDataPoints)
+        {
+            <text>@point.Turns</text>
+        }
+    </pre>    
+}
+
 <pre>
 ********************* DEBUG *********************
 @if (this.gs != null)
@@ -98,6 +104,7 @@
 ********************* DEBUG *********************
 </pre>
 
+@inject HttpClient HttpClient
 @inject BlazorTimer BlazorTimer
 @inject NavigationManager NavigationManager
 @code
@@ -136,29 +143,27 @@
             PlacedCards.Add(i, null);
         }
 
-        //for (var i = 0; i < 4; i++)
-        //{
-        //    CardDefinition useDefinition = null;
-        //    if (i == 0)
-        //        useDefinition = KnownCardDefinitions.Rogue;
-        //    if (i == 1)
-        //        useDefinition = KnownCardDefinitions.Archer;
-        //    if (i == 2)
-        //        useDefinition = KnownCardDefinitions.Paladin;
-        //    if (i == 3)
-        //        useDefinition = KnownCardDefinitions.Cleric;
-
-        //    var card = new Card(useDefinition, i);
-        //    PlacedCards.Add(i, card);
-        //}
-        ////PlacedCards.Add(3, null);
-        //PlacedCards.Add(4, null);
-
         EnemyCard = ThisScenario.EnemyCard;
 
         BlazorTimer.SetTimer(500);
         BlazorTimer.OnElapsed += SimulationTick;
 
+
+
+    }
+
+    List<HistogramDataPoint> histogramDataPoints;
+    protected async override Task OnInitializedAsync()
+    {
+        histogramDataPoints = await HttpClient.GetFromJsonAsync<List<HistogramDataPoint>>("api/Histogram");
+
+        await base.OnInitializedAsync();
+    }
+
+
+    private class HistogramDataPoint
+    {
+        public int Turns{ get; set; }
     }
 
     private bool IsPlaced(int cardId)
@@ -256,6 +261,13 @@
         var newCardId = nonNullCards.Any() ? nonNullCards.Max(x => x.Id) + 1 : 1;
 
         PlacedCards[cardLocation.CollectionIndex] = new Card(cardDefinition, newCardId);
+
+        this.StateHasChanged();
+    }
+
+    private void HandleRemove(CardLocation cardLocation)
+    {
+        PlacedCards[cardLocation.CollectionIndex] = null;
 
         this.StateHasChanged();
     }

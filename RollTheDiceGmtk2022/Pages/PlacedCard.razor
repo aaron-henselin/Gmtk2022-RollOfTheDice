@@ -2,6 +2,13 @@
 @using RollTheDiceGmtk2022Logic
 
 <div class="card" draggable="true" @ondragstart="@(() => HandleDragStart(Location))" ondragover="event.preventDefault();" @ondrop="@(() => HandleDragStop(Location))">
+    @if (!IsEnemy)
+    {
+        <div class="oracle-dice-match-container">
+            <span class="dice-match-rule">@Oracle</span>
+        </div>
+    }
+
     <div class="card-header">
         <div class="row">
             @{
@@ -13,6 +20,13 @@
             </div>
 
             <div class="col-4 text-right">
+                @if (!IsEnemy)
+                {
+                    <button type="button" @onclick="@(() => OnRemove(Location))" class="close remove-card" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                }
+
                 <span class="hp">@Card.Hp</span>
             </div>
         </div>
@@ -43,7 +57,7 @@
 
 @code {
     [Parameter]
-    public Scenario Scenario { get; set; }
+    public DiceMatchRule Oracle { get; set; }
 
     [Parameter]
     public Card Card { get; set; }
@@ -59,6 +73,9 @@
 
     [Parameter]
     public Action<CardLocation> OnDragStop { get; set; }
+
+    [Parameter]
+    public Action<CardLocation> OnRemove { get; set; }
 
     [Parameter]
     public Action<DiceMatchRuleLocation> OnDiceMatchRuleDragStart { get; set; }

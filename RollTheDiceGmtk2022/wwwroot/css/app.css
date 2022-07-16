@@ -49,17 +49,25 @@ a, .btn-link {
         top: 0.5rem;
     }
 
-
 h3 {
     font-family: 'heorot';
 }
 
-.oracle-dice-match-rule {
-    width: 50px;
+.card-hand {
+    display: flex;
+    flex-flow: row wrap;
+    margin-right: -15px;
+    margin-left: -15px;
 }
 
-.oracle-dice-match-rule + .oracle-dice-match-rule {
-    margin-left: 10px;
+.oracle-dice-match-container {
+    display: inline-block;
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+    text-align: center;
+    position: absolute;
+    top: -75px;
 }
 
 .card {
@@ -71,6 +79,13 @@ h3 {
     background-size: 100%;
     -webkit-box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0);
     box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0);
+    margin-bottom: 100px;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex: 1 0 0%;
+    flex: 1 0 0%;
+    -ms-flex-direction: column;
+    flex-direction: column;
 }
 
 .card-deck .card:first-child {
@@ -90,9 +105,9 @@ h3 {
     background: none;
 }
 
-    .list-group-item .border-right {
-        border-color: #EE9463 !important;
-    }
+.list-group-item .border-right {
+    border-color: #EE9463 !important;
+}
 
 .card.missing-card:after {
     content: 'Place a card';
@@ -119,6 +134,22 @@ h3 {
     padding: 5px;
     vertical-align: middle;
     letter-spacing: 1.5px;
+}
+
+button.close.remove-card {
+    border-radius: 5px;
+    border: 1px solid black;
+    width: 26px;
+    position: absolute;
+    top: -25px;
+    right: -15px;
+    opacity: 1;
+    background-color: black;
+    color: red;
+}
+
+button.close.remove-card span {
+    margin-top: -2px;
 }
 
 .dice-match-rule {
