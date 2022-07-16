@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace RollTheDiceGmtk2022.Game
 {
@@ -10,6 +11,16 @@ namespace RollTheDiceGmtk2022.Game
         {
             Hp = definition.Hp;
             Id = id;
+            Slots = definition.Slots.Select(x => new CardSlot(x)).ToList();
+        }
+
+        public Card(Card otherCard)
+        {
+            this.Hp = otherCard.Hp;
+            this.Id = otherCard.Id;
+            this.Slots = otherCard.Slots;
+
+
         }
 
         public int Hp { get; set; }
@@ -24,6 +35,12 @@ namespace RollTheDiceGmtk2022.Game
         public CardSlot(SlotDefinition definition)
         {
             Effect = definition.Effect;
+        }
+
+        public CardSlot(CardSlot slot)
+        {
+            this.Rule = slot.Rule;
+            this.Effect = new CardSlotEffect(slot.Effect);
         }
 
         public DiceMatchRule? Rule { get; set; }

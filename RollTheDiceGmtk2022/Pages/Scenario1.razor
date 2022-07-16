@@ -10,12 +10,26 @@
 
 
 
-<button id="run-button" @onclick="@(() => RunSimulation())"></button>
-@foreach (var card in ScenarioCards.Values)
-{
-    
-}
+<button id="run-button" @onclick="@(() => RunSimulation())">RUN</button>
 
+<pre>
+********************* DEBUG *********************
+@if (this.gs != null)
+{
+    <text>
+        IsGameEnded: @gs.IsGameEnded
+        IsEnemyCardDefeated: @gs.IsEnemyCardDefeated
+        IsPlayerHandDefeated: @gs.IsPlayerHandDefeated
+        DiceIndex: @gs.Timer.DiceIndex
+        TurnNumber: @gs.Timer.TurnNumber
+    </text>
+    foreach (var line in gs.Log)
+    {
+        <text>@line</text>@Environment.NewLine
+    }
+}
+********************* DEBUG *********************
+</pre>
 
 @inject BlazorTimer BlazorTimer
 @inject NavigationManager NavigationManager
@@ -53,6 +67,8 @@
             //PlacedCards.Add(i, null); //todo
         }
 
+        BlazorTimer.SetTimer(500);
+        BlazorTimer.OnElapsed += SimulationTick;
 
     }
 
@@ -84,21 +100,40 @@
         this.StateHasChanged();
     }
 
-    bool isRunning = false;
+    GameState gs;
+    bool isRunning;
     public void RunSimulation()
     {
-        var gs = new GameState();
-        
+        gs = new GameState();
+        gs.DiceOracle = new List<DiceMatchRule> { DiceMatchRule.Even, DiceMatchRule.Even, DiceMatchRule.Even, DiceMatchRule.Even, DiceMatchRule.Even };
+        gs.PlayerHand = new CardHand(this.PlacedCards);
+
+        var effect = new CardSlotEffect();
+        effect.Type = CardSlotEffectType.Attack;
+        effect.Amount = 10;
+        effect.Name = "Backstab";
+
+        var def = new CardDefinition();
+        def.Name = "Enemy Rogue";
+        def.Hp=250;
+        def.Slots.Add(new SlotDefinition{ Name = "Backstab",Effect=effect});
+        gs.EnemyCard =  new Card(def, 999);
+
+        isRunning = true;
     }
 
-    private void StartTimer()
+    public void StopSimulation()
     {
-        BlazorTimer.SetTimer(500);
-        //BlazorTimer.OnElapsed += SimulationTick;
-
+        isRunning = false;
     }
 
-    
+    private void SimulationTick()
+    {
+        if (isRunning && !gs.IsGameEnded){
+            gs.AdvanceGameState();
+            this.StateHasChanged();
+        }
+    }
 
 }
 

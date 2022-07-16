@@ -4,17 +4,22 @@ namespace RollTheDiceGmtk2022.Game
 {
     public class CardHand
     {
-        public List<Card> Cards { get; set; } = new List<Card>();
-
-        public Card ActiveCard => Cards[0];
-
-        public void Pop()
+        public CardHand()
         {
-            var previouslyActiveCard = ActiveCard;
-            Cards.RemoveAt(0);
-            if (!previouslyActiveCard.IsDead)
-                Cards.Add(previouslyActiveCard);
+
         }
+
+        public CardHand(Dictionary<int,Card> cardsByPosition)
+        {
+            foreach (var kvp in cardsByPosition)
+            {
+                Cards.Add(kvp.Key, kvp.Value == null ? null : new Card(kvp.Value));
+            }
+        }
+
+        public Dictionary<int, Card> Cards { get; set; } = new Dictionary<int, Card>();
+
+
     }
 
 
