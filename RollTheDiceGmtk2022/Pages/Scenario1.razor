@@ -14,6 +14,7 @@
     .card-deck {
         flex-flow: row nowrap;
         overflow-x: auto;
+        padding-bottom: 5px;
     }
 
     .card {
@@ -26,6 +27,14 @@
 
     .card-deck .card:last-child {
         margin-right: 0;
+    }
+
+    .card.missing-card:after {
+        content: 'Place a card';
+    }
+
+    .hp {
+        font-size: 1rem;
     }
 
     .draggable-dice-match-rule-receiver {
@@ -58,7 +67,7 @@
     }
 </style>
 
-<button id="run-button" @onclick="@(() => RunSimulation())"></button>
+<button id="run-button" @onclick="@(() => RunSimulation())">Run Simulation</button>
 
 
 <div class="container-fluid">
@@ -76,7 +85,7 @@
             <div class="col-3">
                 <div class="card enemy-card">
                     <div class="card-header text-right">
-                        <span class="badge badge-danger">@EnemyCard.Hp</span>
+                        <span class="badge badge-danger hp">@EnemyCard.Hp</span>
                     </div>
                     <ul class="list-group list-group-flush">
                         @for (var i = 0; i < EnemyCard.Slots.Count; i++)
@@ -111,13 +120,17 @@
                     @foreach (var kvp in PlacedCards)
                     {
                         var card = kvp.Value;
+                        var cardLocation = new CardLocation(true, kvp.Key);
 
                         if (card == null)
+                        {
+                            <div class="card missing-card" ondragover="event.preventDefault();" @ondrop="@(() => HandleCardDragStop(cardLocation))"></div>
                             continue;
+                        }
 
-                        <div class="card">
+                        <div class="card" draggable="true" @ondragstart="@(() => HandleCardDragStart(cardLocation))" ondragover="event.preventDefault();" @ondrop="@(() => HandleCardDragStop(cardLocation))">
                             <div class="card-header text-right">
-                                <span class="badge badge-success">@card.Hp</span>
+                                <span class="badge badge-success hp">@card.Hp</span>
                             </div>
 
                             <ul class="list-group list-group-flush">
@@ -209,8 +222,11 @@
     List<DiceMatchRule> Oracle = new List<DiceMatchRule> { DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Even };
     Card EnemyCard;
 
-
+    public CardLocation? CardLocationDragStart { get; set; }
     public DiceMatchRuleLocation? DiceMatchRuleLocationPayload { get; set; }
+
+    [Parameter]
+    public EventCallback CardMoved { get; set; }
 
     [Parameter]
     public EventCallback DiceMatchRuleMoved { get; set; }
@@ -243,16 +259,7 @@
         //PlacedCards.Add(3, null);
         PlacedCards.Add(4, null);
 
-        var enemyEffect = new CardSlotEffect();
-        enemyEffect.Type = CardSlotEffectType.Attack;
-        enemyEffect.Amount = 10;
-        enemyEffect.Name = "Backstab";
-
-        var enemyDef = new CardDefinition();
-        enemyDef.Name = "Enemy Rogue";
-        enemyDef.Hp=80;
-        enemyDef.Slots.Add(new SlotDefinition{ Name = "Backstab",Effect=enemyEffect});
-        EnemyCard =  new Card(enemyDef, 999);
+        EnemyCard = EnemyCardFactory.BuildPlagueRats();
 
         BlazorTimer.SetTimer(500);
         BlazorTimer.OnElapsed += SimulationTick;
@@ -303,7 +310,7 @@
         var gs2 = new GameState();
         gs2.DiceOracle = Oracle;
         gs2.PlayerHand = new CardHand(this.PlacedCards);
-        gs2.EnemyCard = EnemyCard;
+        gs2.EnemyCard = new Card(EnemyCard);
 
         return gs2;
     }
@@ -382,9 +389,27 @@
         }
     }
 
+    private void HandleCardDragStart(CardLocation location)
+    {
+        CardLocationDragStart = location;
+    }
+
+    private async Task HandleCardDragStop(CardLocation location)
+    {
+        if (CardLocationDragStart == null)
+            return;
+
+        OnCardMoved(CardLocationDragStart.Value.CollectionIndex, location.CollectionIndex);
+
+        await CardMoved.InvokeAsync(this);
+
+        CardLocationDragStart = null;
+
+        this.StateHasChanged();
+    }
+
     private void HandleDiceRuleDragStart(DiceMatchRuleLocation location)
     {
-        //Console.WriteLine($"HandleDragStart {i}");
         DiceMatchRuleLocationPayload = location;
     }
 
@@ -393,9 +418,16 @@
         if (DiceMatchRuleLocationPayload == null)
             return;
 
+        // Because our dice match rules might exist inside a card, dragging them elsewhere
+        // will tragger the actual card drag, but this drop fires first so clear the card drag start
+        // so the card drag stop does nothing.
+        CardLocationDragStart = null;
+
         OnDiceMatchRuleMoved(DiceMatchRuleLocationPayload.Value, location);
 
         await DiceMatchRuleMoved.InvokeAsync(this);
+
+        DiceMatchRuleLocationPayload = null;
 
         this.StateHasChanged();
     }
