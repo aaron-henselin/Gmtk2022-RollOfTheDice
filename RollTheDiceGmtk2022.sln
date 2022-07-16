@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RollTheDiceGmtk2022", "Roll
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RollTheDiceGmtk2022.Test", "RollTheDiceGmtk2022.Test\RollTheDiceGmtk2022.Test.csproj", "{5189DBD2-5B42-41A4-82AF-F91255936EDE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RollTheDiceGmtk2022Logic", "RollTheDiceGmtk2022Logic\RollTheDiceGmtk2022Logic.csproj", "{58D76B5F-EE79-47EB-8A22-289DC045C3C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{5189DBD2-5B42-41A4-82AF-F91255936EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5189DBD2-5B42-41A4-82AF-F91255936EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5189DBD2-5B42-41A4-82AF-F91255936EDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58D76B5F-EE79-47EB-8A22-289DC045C3C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58D76B5F-EE79-47EB-8A22-289DC045C3C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58D76B5F-EE79-47EB-8A22-289DC045C3C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58D76B5F-EE79-47EB-8A22-289DC045C3C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
