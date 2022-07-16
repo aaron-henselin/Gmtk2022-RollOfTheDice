@@ -35,16 +35,16 @@ namespace RollTheDiceGmtk2022.Game
         public bool AdvanceGameState()
         {
             var thisOracle = DiceOracle[timer.DiceIndex];
-          
-
+           
             AdvanceGameStateByPhase(thisOracle);
+
 
             //todo: check for game-end states and break;
             if (IsGameEnded)
                 return true;
 
             timer.DiceIndex++;
-            if (timer.DiceIndex == 6)
+            if (timer.DiceIndex == 5)
             {
                 timer.DiceIndex = 0;
                 timer.TurnNumber++;
@@ -67,14 +67,14 @@ namespace RollTheDiceGmtk2022.Game
 
             Log.Add("Rules: " + string.Join(",",matchingRules));
 
-            var activeCard = PlayerHand.Cards[timer.DiceIndex];
-            if (activeCard != null && !activeCard.IsDead)
+            var activePlayerCard = PlayerHand.Cards[timer.DiceIndex];
+            if (activePlayerCard != null && !activePlayerCard.IsDead)
             {
-                Log.Add("Player card activating:" + activeCard.Id);
-                var playerCardSlotsToActivate = activeCard.Slots.Where(x => x.Rule != null && matchingRulesSet.Contains(x.Rule.Value)).ToList();
+                Log.Add("Player card activating:" + activePlayerCard.Id);
+                var playerCardSlotsToActivate = activePlayerCard.Slots.Where(x => x.Rule != null && matchingRulesSet.Contains(x.Rule.Value)).ToList();
                 Log.Add("Slot count activating:" + playerCardSlotsToActivate.Count);
                 foreach (var slotToActivate in playerCardSlotsToActivate)
-                    RunEffect(activeCard, slotToActivate.Effect, EnemyCard);
+                    RunEffect(activePlayerCard, slotToActivate.Effect, EnemyCard);
             }
             else
             {
@@ -83,17 +83,20 @@ namespace RollTheDiceGmtk2022.Game
 
             if (!EnemyCard.IsDead)
             {
-                Log.Add("EnemyCard activating:" + activeCard.Id);
+                Log.Add("EnemyCard activating:" + EnemyCard.Id);
                 var enemyCardSlotsToActivate = EnemyCard.Slots.Where(x => x.Rule != null && matchingRulesSet.Contains(x.Rule.Value)).ToList();
                 Log.Add("Slot count activating:" + enemyCardSlotsToActivate.Count);
                 foreach (var slotToActivate in enemyCardSlotsToActivate)
-                    RunEffect(EnemyCard, slotToActivate.Effect, activeCard);
+                    RunEffect(EnemyCard, slotToActivate.Effect, activePlayerCard);
             }
 
         }
 
         public void RunEffect(Card source, CardSlotEffect effect, Card target)
         {
+            if (target == null)
+                return;
+
             switch (effect.Type)
             {
                 case CardSlotEffectType.Attack:
