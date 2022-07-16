@@ -55,7 +55,9 @@ namespace RollTheDiceGmtk2022.Game
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.Evade
                 },
-
+                new SlotDefinition {
+                    Effect = KnownCardSlotEffects.Evade
+                },
             }
         };
 
@@ -66,6 +68,9 @@ namespace RollTheDiceGmtk2022.Game
             Slots = new List<SlotDefinition> {
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.Longbow
+                },
+                new SlotDefinition {
+                    Effect = KnownCardSlotEffects.HealingHerbsAndSpices
                 },
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.HealingHerbsAndSpices
@@ -84,6 +89,9 @@ namespace RollTheDiceGmtk2022.Game
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.ShieldWall
                 },
+                new SlotDefinition {
+                    Effect = KnownCardSlotEffects.ShieldWall
+                },
             }
         };
         public static CardDefinition Cleric = new CardDefinition
@@ -93,6 +101,9 @@ namespace RollTheDiceGmtk2022.Game
             Slots = new List<SlotDefinition> {
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.LayOnHands
+                },
+                new SlotDefinition {
+                    Effect = KnownCardSlotEffects.TollOfTheDead
                 },
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.TollOfTheDead
@@ -107,6 +118,9 @@ namespace RollTheDiceGmtk2022.Game
             Slots = new List<SlotDefinition> {
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.Bite
+                },
+                new SlotDefinition {
+                    Effect = KnownCardSlotEffects.Munch
                 },
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.Munch
