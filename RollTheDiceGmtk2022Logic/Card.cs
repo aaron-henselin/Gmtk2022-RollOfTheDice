@@ -9,6 +9,7 @@ namespace RollTheDiceGmtk2022.Game
     {
         public Card(CardDefinition definition, int id)
         {
+            Name = definition.Name;
             Hp = definition.Hp;
             Id = id;
             Slots = definition.Slots.Select(x => new CardSlot(x)).ToList();
@@ -16,6 +17,7 @@ namespace RollTheDiceGmtk2022.Game
 
         public Card(Card otherCard)
         {
+            this.Name = otherCard.Name;
             this.Hp = otherCard.Hp;
             this.Id = otherCard.Id;
             this.Slots = otherCard.Slots;
@@ -23,6 +25,7 @@ namespace RollTheDiceGmtk2022.Game
 
         }
 
+        public string Name { get; set; }
         public int Hp { get; set; }
         public int Id { get; private set; }
         public List<CardSlot> Slots { get; set; } = new List<CardSlot>();
