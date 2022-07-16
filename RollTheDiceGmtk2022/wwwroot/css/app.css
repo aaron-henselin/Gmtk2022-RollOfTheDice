@@ -48,3 +48,142 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+
+h3 {
+    font-family: 'heorot';
+}
+
+.oracle-dice-match-rule {
+    width: 50px;
+}
+
+.oracle-dice-match-rule + .oracle-dice-match-rule {
+    margin-left: 10px;
+}
+
+.card {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+    min-height: 395px;
+    background: #C27258;
+    background-size: 100%;
+    -webkit-box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0);
+    box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0);
+}
+
+.card-deck .card:first-child {
+    margin-left: 0;
+}
+
+.card-deck .card:last-child {
+    margin-right: 0;
+}
+
+.card.missing-card {
+    background: url("../door.png");
+    background-size: 100%;
+}
+
+.list-group-item {
+    background: none;
+}
+
+    .list-group-item .border-right {
+        border-color: #EE9463 !important;
+    }
+
+.card.missing-card:after {
+    content: 'Place a card';
+}
+
+.card-header {
+    background: url("../cardheader.png");
+    height: 85px;
+}
+
+.card-header-name {
+    font-family: 'Heorot';
+    font-size: 250%;
+    color: #EE9463;
+}
+
+.hp {
+    border: 1px solid #EE9463;
+    color: #fff;
+    font-size: 1rem;
+    line-height: 60px;
+    margin-right: 10px;
+    padding: 5px;
+    vertical-align: middle;
+}
+
+.dice-match-rule {
+    display: inline-block;
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 45px;
+    background: url("../dice_background.png");
+    font-size: 0.8em;
+    text-shadow: 0px 1px #90868a;
+}
+
+.dice-match-rule:empty {
+    background-color: transparent;
+    border-color: #EE9463;
+    border-style: dotted;
+    border-width: 2px;
+    height: 50px;
+    width: 50px;
+}
+
+.card .dice-match-rule {
+    margin-top: 15px;
+}
+
+.draggable-dice-match-rule-receiver + .draggable-dice-match-rule-receiver {
+    margin-left: 10px;
+}
+
+.draggable-dice-match-rule-receiver:empty {
+    position: relative;
+    top: -1px;
+}
+
+.badge.badge-primary {
+    width: 50px;
+    height: 50px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 45px;
+    background: url("../dice_background.png");
+    font-size: 0.8em;
+    text-shadow: 0px 1px #90868a;
+}
+
+.draggable-dice-match-rule {
+    position: relative;
+    top: -5px;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+    background: #C27258;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #EE9463;
+}
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #EE9463;
+    }

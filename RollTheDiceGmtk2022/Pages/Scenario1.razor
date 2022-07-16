@@ -3,149 +3,6 @@
 @using RollTheDiceGmtk2022.Game
 @using RollTheDiceGmtk2022Logic
 
-<style>
-
-    h3{
-        font-family: 'heorot';
-    }
-    .oracle-dice-match-rule {
-        width: 50px;
-    }
-
-    .oracle-dice-match-rule + .oracle-dice-match-rule {
-        margin-left: 10px;
-    }
-
-    .card-deck {
-        flex-flow: row nowrap;
-        overflow-x: auto;
-        padding-bottom: 5px;
-    }
-
-    .card {
-        width: 300px;
-        min-width:300px;
-        min-height: 395px;
-        background: #C27258;
-        background-size:100%;
-
-        -webkit-box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0); 
-        box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0);
-    }
-
-    .card-deck .card:first-child {
-        margin-left: 0;
-    }
-
-    .card-deck .card:last-child {
-        margin-right: 0;
-    }
-
-    .card.missing-card{
-        background:url("door.png");
-        background-size: 100%;
-    }
-
-    .list-group-item{
-        background:none;
-    }
-
-    .list-group-item .border-right{
-        border-color:#EE9463 !important;
-    }
-
-    .card.missing-card:after {
-        content: 'Place a card';
-    }
-
-    .card-header{
-        background:url("cardheader.png");
-        height: 85px;
-    }
-
-    .card-header-name{
-        font-family: 'Heorot';
-        font-size: 250%;
-        color:#EE9463;
-    }
-
-    .hp {
-        font-size: 1rem;
-    }
-
-    .dice-match-rule-slot {
-        background-color: #007bff;
-        border-radius: .25rem;
-        border-style: solid;
-        border-width: 1px;
-        color: #fff;
-        display: inline-block;
-        font-size: .75rem;
-        height: 18px;
-        width: 50px;
-    }
-
-    .dice-match-rule-slot:empty {
-        background-color: transparent;
-        border-color:#EE9463;
-        border-style: dotted;
-        border-width: 2px;
-        height: 50px;
-        width: 50px;
-    }
-
-    .card .dice-match-rule-slot {
-        margin-top: 15px;
-    }
-
-    .draggable-dice-match-rule-receiver + .draggable-dice-match-rule-receiver {
-        margin-left: 10px;
-    }
-
-    .draggable-dice-match-rule-receiver:empty {
-        position: relative;
-        top: -1px;
-    }
-
-    .badge.badge-primary{
-                width: 50px;
-        height: 50px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        text-align: center;
-        line-height: 45px;
-        background:url("dice_background.png");
-        font-size: 0.8em;
-        text-shadow:0px 1px #90868a;
-    }
-
-    .draggable-dice-match-rule {
-        position: relative;
-        top: -5px;
-
-    }
-
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-      background: #C27258;
-    }
- 
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-      background: #EE9463; 
-    }
-
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-      background: #EE9463; 
-    }
-
-</style>
-
 <button id="run-button" @onclick="@(() => RunSimulation())">Run Simulation</button>
 
 
@@ -156,7 +13,7 @@
         <div class="mb-2">
             @foreach (var oracleDiceMatchRule in Oracle)
             {
-                <span class="badge badge-primary oracle-dice-match-rule">@oracleDiceMatchRule</span>
+                <span class="dice-match-rule oracle-dice-match-rule">@oracleDiceMatchRule</span>
             }
         </div>
 
@@ -167,12 +24,28 @@
 
             <div class="col-9">
                 <div class="card-deck">
-                    @foreach (var kvp in PlacedCards)
+                    @for (var i = 0; i < Oracle.Count; i++)
                     {
-                        var card = kvp.Value;
-                        var cardLocation = new CardLocation(true, kvp.Key);
+                        var card = PlacedCards[i];
+                        var cardLocation = new CardLocation(true, i);
 
-                        <PlacedCard Card="@card" Location="@cardLocation" OnDragStart="@HandleCardDragStart" OnDragStop="@HandleCardDragStop" OnDiceMatchRuleDragStart="@HandleDiceRuleDragStart" OnDiceMatchRuleDragStop="@HandleDiceRuleDragStop"></PlacedCard>
+                        if (card == null)
+                        {
+                            <div class="card missing-card" ondragover="event.preventDefault();" @ondrop="@(() => HandleCardDragStop(cardLocation))">
+                                <select @onchange="@(args => HandleCardSelection(cardLocation, args.Value))">
+                                    <option>Choose a Card</option>
+
+                                    @foreach (var cardDefinition in ThisScenario.AllowedCardDefinitions)
+                                    {
+                                        <option value="@cardDefinition.Name">@cardDefinition.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                        else
+                        {
+                            <PlacedCard Card="@card" Location="@cardLocation" OnDragStart="@HandleCardDragStart" OnDragStop="@HandleCardDragStop" OnDiceMatchRuleDragStart="@HandleDiceRuleDragStart" OnDiceMatchRuleDragStop="@HandleDiceRuleDragStop"></PlacedCard>
+                        }
                     }
                 </div>
 
@@ -185,7 +58,7 @@
                         <span class="bg-white border-primary draggable-dice-match-rule-receiver" ondragover="event.preventDefault();" @ondrop="@(() => HandleDiceRuleDragStop(diceMatchRuleLocation))">
                             @if (rule != null)
                             {
-                                <span class="badge badge-primary draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(diceMatchRuleLocation))">@rule.Value</span>
+                                <span class="dice-match-rule draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(diceMatchRuleLocation))">@rule.Value</span>
                             }
                         </span>
                     }
@@ -258,23 +131,28 @@
 
         this.Oracle = ThisScenario.Oracle;
 
-        for (var i = 0; i < 4; i++)
+        for (var i = 0; i < Oracle.Count; i++)
         {
-            CardDefinition useDefinition = null;
-            if (i == 0)
-                useDefinition = KnownCardDefinitions.Rogue;
-            if (i == 1)
-                useDefinition = KnownCardDefinitions.Archer;
-            if (i == 2)
-                useDefinition = KnownCardDefinitions.Paladin;
-            if (i == 3)
-                useDefinition = KnownCardDefinitions.Cleric;
-
-            var card = new Card(useDefinition, i);
-            PlacedCards.Add(i, card);
+            PlacedCards.Add(i, null);
         }
-        //PlacedCards.Add(3, null);
-        PlacedCards.Add(4, null);
+
+        //for (var i = 0; i < 4; i++)
+        //{
+        //    CardDefinition useDefinition = null;
+        //    if (i == 0)
+        //        useDefinition = KnownCardDefinitions.Rogue;
+        //    if (i == 1)
+        //        useDefinition = KnownCardDefinitions.Archer;
+        //    if (i == 2)
+        //        useDefinition = KnownCardDefinitions.Paladin;
+        //    if (i == 3)
+        //        useDefinition = KnownCardDefinitions.Cleric;
+
+        //    var card = new Card(useDefinition, i);
+        //    PlacedCards.Add(i, card);
+        //}
+        ////PlacedCards.Add(3, null);
+        //PlacedCards.Add(4, null);
 
         EnemyCard = ThisScenario.EnemyCard;
 
@@ -367,6 +245,19 @@
 
             this.StateHasChanged();
         }
+    }
+
+    private void HandleCardSelection(CardLocation cardLocation, object obj)
+    {
+        var cardDefinitionName = (string)obj;
+        var cardDefinition = ThisScenario.AllowedCardDefinitions.Single(x => x.Name == cardDefinitionName);
+
+        var nonNullCards = PlacedCards.Values.Where(x => x != null);
+        var newCardId = nonNullCards.Any() ? nonNullCards.Max(x => x.Id) + 1 : 1;
+
+        PlacedCards[cardLocation.CollectionIndex] = new Card(cardDefinition, newCardId);
+
+        this.StateHasChanged();
     }
 
     public void OnDiceMatchRuleMoved(DiceMatchRuleLocation src, DiceMatchRuleLocation dest)

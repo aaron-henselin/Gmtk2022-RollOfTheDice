@@ -1,54 +1,50 @@
 ﻿@using RollTheDiceGmtk2022.Game
+@using RollTheDiceGmtk2022Logic
 
-@if (Card == null)
-{
-    <div class="card missing-card" ondragover="event.preventDefault();" @ondrop="@(() => HandleDragStop(Location))"></div>
-}
-else
-{
-    <div class="card" draggable="true" @ondragstart="@(() => HandleDragStart(Location))" ondragover="event.preventDefault();" @ondrop="@(() => HandleDragStop(Location))">
-        <div class="card-header">
-            <div class="row">
-                @{
-                    var nameCssClass = IsEnemy ? "text-danger" : "";
-                }
+<div class="card" draggable="true" @ondragstart="@(() => HandleDragStart(Location))" ondragover="event.preventDefault();" @ondrop="@(() => HandleDragStop(Location))">
+    <div class="card-header">
+        <div class="row">
+            @{
+                var nameCssClass = IsEnemy ? "text-danger" : "";
+            }
 
-                <div class="col-9 @nameCssClass card-header-name">
-                    @Card.Name
-                </div>
+            <div class="col-8 @nameCssClass card-header-name">
+                @Card.Name
+            </div>
 
-                <div class="col-3 text-right">
-                    <span class="badge badge-success hp">@Card.Hp</span>
-                </div>
+            <div class="col-4 text-right">
+                <span class="hp">@Card.Hp</span>
             </div>
         </div>
-
-        <ul class="list-group list-group-flush">
-            @for (var i = 0; i < Card.Slots.Count; i++)
-            {
-                var slot = Card.Slots[i];
-                var rule = slot.Rule;
-                DiceMatchRuleLocation? diceMatchRuleLocation = new DiceMatchRuleLocation(false, Location.CollectionIndex, i);
-
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col-4 border-right">
-                            <PlacedDiceMatchRule Rule="@rule" Location="@diceMatchRuleLocation" OnDragStart="@OnDiceMatchRuleDragStart" OnDragStop="@OnDiceMatchRuleDragStop"></PlacedDiceMatchRule>
-                        </div>
-
-                        <div class="col-8">
-                            <div><strong>@slot.Effect.Name</strong></div>
-                            <div>@slot.Effect.Type.ToString() : @slot.Effect.Amount</div>
-                        </div>
-                    </div>
-                </li>
-            }
-        </ul>
     </div>
 
-}
+    <ul class="list-group list-group-flush">
+        @for (var i = 0; i < Card.Slots.Count; i++)
+        {
+            var slot = Card.Slots[i];
+            var rule = slot.Rule;
+            DiceMatchRuleLocation? diceMatchRuleLocation = new DiceMatchRuleLocation(false, Location.CollectionIndex, i);
+
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-4 border-right">
+                        <PlacedDiceMatchRule Rule="@rule" Location="@diceMatchRuleLocation" OnDragStart="@OnDiceMatchRuleDragStart" OnDragStop="@OnDiceMatchRuleDragStop"></PlacedDiceMatchRule>
+                    </div>
+
+                    <div class="col-8">
+                        <div><strong>@slot.Effect.Name</strong></div>
+                        <div>@slot.Effect.Type.ToString() : @slot.Effect.Amount</div>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+</div>
 
 @code {
+    [Parameter]
+    public Scenario Scenario { get; set; }
+
     [Parameter]
     public Card Card { get; set; }
 

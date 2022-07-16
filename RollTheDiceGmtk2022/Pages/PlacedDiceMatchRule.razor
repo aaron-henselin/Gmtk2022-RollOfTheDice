@@ -4,22 +4,22 @@
 {
     if (Location.HasValue)
     {
-        <span class="dice-match-rule-slot" ondragover="event.preventDefault();" @ondrop="@(() => OnDragStop(Location.Value))"></span>
+        <span class="dice-match-rule" ondragover="event.preventDefault();" @ondrop="@(() => OnDragStop(Location.Value))"></span>
     }
     else
     {
-        <span class="dice-match-rule-slot"></span>
+        <span class="dice-match-rule"></span>
     }
 }
 else
 {
     if (Location.HasValue)
     {
-        <span class="dice-match-rule-slot" draggable="true" @ondragstart="@(() => OnDragStart(Location.Value))" ondragover="event.preventDefault();" @ondrop="@(() => OnDragStop(Location.Value))">@Rule</span>
+        <span class="dice-match-rule" draggable="true" @ondragstart="@(() => OnDragStart(Location.Value))" ondragover="event.preventDefault();" @ondrop="@(() => OnDragStop(Location.Value))">@Rule</span>
     }
     else
     {
-          <span class="dice-match-rule-slot">@Rule</span>
+          <span class="dice-match-rule">@Rule</span>
     
     }
 }
