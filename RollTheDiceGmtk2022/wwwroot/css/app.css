@@ -80,7 +80,7 @@ h3 {
     width: 300px;
     min-width: 300px;
     max-width: 300px;
-    min-height: 395px;
+    min-height: 360px;
     background: #C27258;
     background-size: 100%;
     -webkit-box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0);
@@ -175,6 +175,11 @@ button.close.remove-card span {
     background: url("../dice_background.png");
     font-size: 0.8em;
     text-shadow: 0px 1px #90868a;
+    vertical-align: top;
+}
+
+.dice-match-rule + .dice-match-rule {
+    margin-left: 10px;
 }
 
 .dice-match-rule:empty {
@@ -198,23 +203,6 @@ button.close.remove-card span {
 .draggable-dice-match-rule-receiver:empty {
     position: relative;
     top: -1px;
-}
-
-.badge.badge-primary {
-    width: 50px;
-    height: 50px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-align: center;
-    line-height: 45px;
-    background: url("../dice_background.png");
-    font-size: 0.8em;
-    text-shadow: 0px 1px #90868a;
-}
-
-.draggable-dice-match-rule {
-    position: relative;
-    top: -5px;
 }
 
 ::-webkit-scrollbar {

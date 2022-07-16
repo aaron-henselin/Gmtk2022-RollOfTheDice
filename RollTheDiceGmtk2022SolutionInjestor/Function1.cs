@@ -55,9 +55,12 @@ namespace RollTheDiceGmtk2022SolutionInjestor
             var outcome = gs2.AdvanceGameStateUntilCompletion(50);
             if (outcome.Won)
             {
+                var ipAddress = req.HttpContext.Connection.RemoteIpAddress.ToString();
                 var result = new SavedResult
                 {
-                    IpAddress = req.HttpContext.Connection.RemoteIpAddress.ToString(),
+                    Id = scenarioId + "-" + ipAddress,
+                    ScenarioId = scenarioId,
+                    IpAddress = ipAddress,
                     Turns = outcome.EndingTurn
                 };
                 await Save(result);
@@ -78,7 +81,7 @@ namespace RollTheDiceGmtk2022SolutionInjestor
             var scenarioId = Convert.ToInt32(parameters["scenario"]);
 
             var results = await GetSavedResultsAsync(scenarioId);
-            return new OkObjectResult(results);
+            return new OkObjectResult(results.Select(x => x.Turns).ToList());
 
         }
 
