@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RollTheDiceGmtk2022Logic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -11,11 +12,17 @@ namespace RollTheDiceGmtk2022.Game
         public int TurnNumber { get; set; } = 0;
         public int DiceIndex { get; set; } = 0;
     }
-    
-    
+       
 
     public class GameState
     {
+        public GameState(Scenario scenario,Dictionary<int,Card> placedCards)
+        {
+            DiceOracle = scenario.Oracle;
+            PlayerHand = new CardHand(placedCards);
+            EnemyCard = new Card(scenario.EnemyCard);
+        }
+
         GameStateTimer timer = new GameStateTimer();
 
         public GameStateTimer Timer => timer;

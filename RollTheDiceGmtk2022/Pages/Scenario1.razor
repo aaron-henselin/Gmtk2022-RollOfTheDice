@@ -1,6 +1,7 @@
 ﻿@page "/1"
 
 @using RollTheDiceGmtk2022.Game
+@using RollTheDiceGmtk2022Logic
 
 <style>
     .oracle-dice-match-rule {
@@ -216,6 +217,10 @@
 @inject NavigationManager NavigationManager
 @code
 {
+    ScenarioRegistrar scenarioRegistrar = new ScenarioRegistrar();
+
+    public Scenario ThisScenario => scenarioRegistrar.Scenarios[0];
+
     Dictionary<int,CardDefinition> ScenarioCards = new Dictionary<int,CardDefinition>();
     Dictionary<int,Card> PlacedCards = new Dictionary<int,Card>();
     Dictionary<int,DiceMatchRule?> DiceMatchRuleDashboard = new Dictionary<int,DiceMatchRule?>();
@@ -235,11 +240,11 @@
     {
         base.OnInitialized();
 
-        DiceMatchRuleDashboard.Add(0, DiceMatchRule.Even);
-        DiceMatchRuleDashboard.Add(1, DiceMatchRule.High);
-        DiceMatchRuleDashboard.Add(2, DiceMatchRule.Low);
-        DiceMatchRuleDashboard.Add(3, null);
-        DiceMatchRuleDashboard.Add(4, null);
+        int pos= 0;
+        foreach (var item in ThisScenario.DiceMatchRulePool)
+            DiceMatchRuleDashboard.Add(pos++, item);
+
+        this.Oracle = ThisScenario.Oracle;
 
         for (var i = 0; i < 4; i++)
         {
@@ -259,7 +264,7 @@
         //PlacedCards.Add(3, null);
         PlacedCards.Add(4, null);
 
-        EnemyCard = EnemyCardFactory.BuildPlagueRats();
+        EnemyCard = ThisScenario.EnemyCard;
 
         BlazorTimer.SetTimer(500);
         BlazorTimer.OnElapsed += SimulationTick;
@@ -307,11 +312,7 @@
 
     private GameState BuildUpGameState()
     {
-        var gs2 = new GameState();
-        gs2.DiceOracle = Oracle;
-        gs2.PlayerHand = new CardHand(this.PlacedCards);
-        gs2.EnemyCard = new Card(EnemyCard);
-
+        var gs2 = new GameState(ThisScenario,this.PlacedCards);
         return gs2;
     }
 

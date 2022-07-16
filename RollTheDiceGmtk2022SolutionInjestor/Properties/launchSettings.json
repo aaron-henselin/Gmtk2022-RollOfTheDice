@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "RollTheDiceGmtk2022SolutionInjestor": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7100",
+      "launchBrowser": false
+    }
+  }
+}
