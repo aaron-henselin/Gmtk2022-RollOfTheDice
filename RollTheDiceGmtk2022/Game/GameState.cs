@@ -72,6 +72,36 @@ namespace RollTheDiceGmtk2022.Game
             return false;
         }
 
+        private void ActivatePlayerCardSlots(Card activePlayerCard, HashSet<DiceMatchRule> matchingRulesSet)
+        {
+            var playerCardSlotsToActivate = activePlayerCard.Slots.Where(x => x.Rule != null && matchingRulesSet.Contains(x.Rule.Value)).ToList();
+            foreach (var slotToActivate in playerCardSlotsToActivate)
+            {
+                var nextDiceIndex = timer.DiceIndex + 1;
+                if (nextDiceIndex == 5)
+                    nextDiceIndex = 0;
+
+                if (slotToActivate.Effect.Type == CardSlotEffectType.Command)
+                {
+                    var otherCard = PlayerHand.Cards[nextDiceIndex];
+                    if (otherCard != null && timer.DiceIndex == nextDiceIndex) //can't activate the same card.
+                        ActivatePlayerCardSlots(otherCard, matchingRulesSet);
+                }
+                else
+                {
+                    Card targetCard;
+                    if (slotToActivate.Effect.Type == CardSlotEffectType.Attack)
+                        targetCard = EnemyCard;
+                    if (slotToActivate.Effect.Type == CardSlotEffectType.Heal ||
+                        slotToActivate.Effect.Type == CardSlotEffectType.DamageBuff ||
+                        slotToActivate.Effect.Type == CardSlotEffectType.Evade)
+                        targetCard = PlayerHand.Cards[nextDiceIndex];
+
+                    RunEffect(activePlayerCard, slotToActivate.Effect, EnemyCard);
+                }
+
+            }
+        }
 
         public void AdvanceGameStateByPhase(DiceMatchRule rule)
         {
@@ -80,7 +110,7 @@ namespace RollTheDiceGmtk2022.Game
             Log.Add("Roll: " + roll);
             
             var matchingRules = DiceMatchRuleReader.GetMatchingRules(roll);
-            var matchingRulesSet = new HashSet<DiceMatchRule>(matchingRules);
+            var activationCriteria = new HashSet<DiceMatchRule>(matchingRules);
 
             Log.Add("Rules: " + string.Join(",",matchingRules));
 
@@ -88,10 +118,7 @@ namespace RollTheDiceGmtk2022.Game
             if (activePlayerCard != null && !activePlayerCard.IsDead)
             {
                 Log.Add("Player card activating:" + activePlayerCard.Id);
-                var playerCardSlotsToActivate = activePlayerCard.Slots.Where(x => x.Rule != null && matchingRulesSet.Contains(x.Rule.Value)).ToList();
-                Log.Add("Slot count activating:" + playerCardSlotsToActivate.Count);
-                foreach (var slotToActivate in playerCardSlotsToActivate)
-                    RunEffect(activePlayerCard, slotToActivate.Effect, EnemyCard);
+                ActivatePlayerCardSlots(activePlayerCard,activationCriteria);
             }
             else
             {
@@ -101,12 +128,15 @@ namespace RollTheDiceGmtk2022.Game
             if (!EnemyCard.IsDead)
             {
                 Log.Add("EnemyCard activating:" + EnemyCard.Id);
-                var enemyCardSlotsToActivate = EnemyCard.Slots.Where(x => x.Rule != null && matchingRulesSet.Contains(x.Rule.Value)).ToList();
+                var enemyCardSlotsToActivate = EnemyCard.Slots.Where(x => x.Rule != null && activationCriteria.Contains(x.Rule.Value)).ToList();
                 Log.Add("Slot count activating:" + enemyCardSlotsToActivate.Count);
                 foreach (var slotToActivate in enemyCardSlotsToActivate)
                     RunEffect(EnemyCard, slotToActivate.Effect, activePlayerCard);
             }
 
+            //remove one-time effects.
+            if (activePlayerCard != null)
+                activePlayerCard.ShieldWallCount = 0;
         }
 
         public void RunEffect(Card source, CardSlotEffect effect, Card target)
@@ -117,11 +147,27 @@ namespace RollTheDiceGmtk2022.Game
             switch (effect.Type)
             {
                 case CardSlotEffectType.Attack:
-                    target.Hp -= (int) effect.Amount;
+                    if (target.ShieldWallCount > 0)
+                    {
+                        target.ShieldWallCount--;
+                        return;
+                    }
+                    var damageWithBuff = effect.Amount;
+                    foreach (var buff in source.DamageBuffs)
+                        damageWithBuff *= buff;
+                    target.Hp -= Convert.ToInt32(damageWithBuff);
                     return;
                     
                 case CardSlotEffectType.Heal:
-                    source.Hp += (int)effect.Amount;
+                    source.Hp += Convert.ToInt32(effect.Amount);
+                    return;
+
+                case CardSlotEffectType.DamageBuff:
+                    source.DamageBuffs.Add(effect.Amount);
+                    return;
+
+                case CardSlotEffectType.ShieldWall:
+                    source.ShieldWallCount++;
                     return;
             }
 
