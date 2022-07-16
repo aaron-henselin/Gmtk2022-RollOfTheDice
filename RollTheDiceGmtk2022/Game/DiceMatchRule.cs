@@ -4,7 +4,7 @@ namespace RollTheDiceGmtk2022.Game
 {
     public enum DiceMatchRule
     {
-        Even, Odd, High, Low
+        Even, Odd, High, Low, Six
     }
 
     public static class DiceMatchRuleArbiter
@@ -16,6 +16,8 @@ namespace RollTheDiceGmtk2022.Game
 
             switch (rule)
             {
+                case DiceMatchRule.Six:
+                    return roll == 6;
                 case DiceMatchRule.Even:
                     return roll % 2 == 0;
                 case DiceMatchRule.Odd:

@@ -191,23 +191,21 @@
         DiceMatchRuleDashboard.Add(3, null);
         DiceMatchRuleDashboard.Add(4, null);
 
-        for (var i = 0; i < 3; i++)
+        for (var i = 0; i < 4; i++)
         {
-            var effect = new CardSlotEffect();
-            effect.Type = CardSlotEffectType.Attack;
-            effect.Amount = 10;
-            effect.Name = "Backstab";
+            CardDefinition useDefinition = null;
+            if (i == 0)
+                useDefinition = KnownCardDefinitions.Rogue;
+            if (i == 1)
+                useDefinition = KnownCardDefinitions.Archer;
+            if (i == 2)
+                useDefinition = KnownCardDefinitions.Paladin;
+            if (i == 3)
+                useDefinition = KnownCardDefinitions.Cleric;
 
-            var def = new CardDefinition();
-            def.Name = "Rogue";
-            def.Hp=25;
-            def.Slots.Add(new SlotDefinition{ Name = "Backstab",Effect=effect});
-            var card = new Card(def, i*50);
+            var card = new Card(useDefinition, i);
             PlacedCards.Add(i, card);
-
-            //PlacedCards.Add(i, null); //todo
         }
-        PlacedCards.Add(3, null);
         PlacedCards.Add(4, null);
 
 
@@ -260,17 +258,7 @@
         var gs2 = new GameState();
         gs2.DiceOracle = new List<DiceMatchRule> { DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Even };
         gs2.PlayerHand = new CardHand(this.PlacedCards);
-
-        var effect = new CardSlotEffect();
-        effect.Type = CardSlotEffectType.Attack;
-        effect.Amount = 10;
-        effect.Name = "Backstab";
-
-        var def = new CardDefinition();
-        def.Name = "Enemy Rogue";
-        def.Hp=80;
-        def.Slots.Add(new SlotDefinition{ Name = "Backstab",Effect=effect});
-        gs2.EnemyCard =  new Card(def, 999);
+        gs2.EnemyCard = EnemyCardFactory.BuildPlagueRats();
 
         return gs2;
     }

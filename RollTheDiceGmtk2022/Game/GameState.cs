@@ -118,12 +118,14 @@ namespace RollTheDiceGmtk2022.Game
             {
                 case CardSlotEffectType.Attack:
                     target.Hp -= (int) effect.Amount;
-                    break;
+                    return;
+                    
                 case CardSlotEffectType.Heal:
                     source.Hp += (int)effect.Amount;
-                    break;
+                    return;
             }
-            
+
+            //throw new Exception("Unknown effect " + effect);
         }
 
 

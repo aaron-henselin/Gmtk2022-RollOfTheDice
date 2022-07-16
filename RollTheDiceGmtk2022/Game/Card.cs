@@ -27,6 +27,8 @@ namespace RollTheDiceGmtk2022.Game
         public int Id { get; private set; }
         public List<CardSlot> Slots { get; set; } = new List<CardSlot>();
 
+        public List<decimal> DamageBuffs = new List<decimal>();
+
         public bool IsDead => Hp <= 0;
     }
 
