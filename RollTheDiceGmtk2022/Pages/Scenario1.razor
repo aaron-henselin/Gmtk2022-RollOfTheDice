@@ -32,7 +32,8 @@
     }
 
     .card-slot-rule-container {
-        
+        height: 50px;
+        background-color: lightgray;
     }
 
     .draggable-dice-match-rule {
@@ -153,6 +154,9 @@
 
     public DiceMatchRuleLocation? DiceMatchRuleLocationPayload { get; set; }
 
+    [Parameter]
+    public EventCallback DiceMatchRuleMoved { get; set; }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -248,5 +252,45 @@
         }
     }
 
+    public void OnDiceMatchRuleMoved(DiceMatchRuleLocation src, DiceMatchRuleLocation dest)
+    {
+        DiceMatchRule rule;
+
+        if (src.InDashboard)
+        {
+            rule = DiceMatchRuleDashboard[src.CollectionIndex].Value;
+            DiceMatchRuleDashboard[src.CollectionIndex] = null;
+        }
+        else
+        {
+            rule = PlacedCards[src.CollectionIndex].Slots[src.SlotIndex].Rule.Value;
+            PlacedCards[src.CollectionIndex].Slots[src.SlotIndex].Rule = null;
+        }
+
+        if (src.InDashboard)
+        {
+            DiceMatchRuleDashboard[src.CollectionIndex] = rule;
+        }
+        else
+        {
+            PlacedCards[src.CollectionIndex].Slots[src.SlotIndex].Rule = rule;
+        }
+    }
+
+    private void HandleDiceRuleDragStart(DiceMatchRuleLocation location)
+    {
+        //Console.WriteLine($"HandleDragStart {i}");
+        DiceMatchRuleLocationPayload = location;
+    }
+
+    private async Task HandleDiceRuleDragStop(DiceMatchRuleLocation location)
+    {
+        if (DiceMatchRuleLocationPayload == null)
+            return;
+
+        OnDiceMatchRuleMoved(DiceMatchRuleLocationPayload.Value, location);
+
+        await DiceMatchRuleMoved.InvokeAsync(this);
+    }
 }
 
