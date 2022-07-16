@@ -240,7 +240,7 @@
             ExpectedOutcome = new GameOutcomeProbability(allOutcomes);
             if (ExpectedOutcome.Won > .9m)
             {
-                var fastest = allOutcomes.Min(x => x.EndingTurn);
+                var fastest = allOutcomes.Where(x => x.Won).Min(x => x.EndingTurn);
                 if (bestRecord == null || bestRecord > fastest)
                 {
                     try
