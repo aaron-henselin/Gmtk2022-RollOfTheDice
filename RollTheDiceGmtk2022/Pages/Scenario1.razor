@@ -238,13 +238,24 @@
                 var thisOutcome = gs.AdvanceGameStateUntilCompletion(50);
                 allOutcomes.Add(thisOutcome);
             }
-
+            ExpectedOutcome = new GameOutcomeProbability(allOutcomes);
             if (ExpectedOutcome.Won > .9m)
             {
                 var fastest = allOutcomes.Min(x => x.EndingTurn);
                 if (bestRecord == null || bestRecord > fastest)
                 {
-                    HttpClient.PostAsJsonAsync("api/injest",this.PlacedCards);
+                    try
+                    {
+                        var task = HttpClient.PostAsJsonAsync("api/injest", this.PlacedCards);
+                        task.ConfigureAwait(false);
+                        task.Start();                        
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+
+
                     bestRecord = fastest;
                 }
             }  

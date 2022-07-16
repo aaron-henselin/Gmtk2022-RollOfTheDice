@@ -28,7 +28,7 @@ namespace RollTheDiceGmtk2022
                 {
                     BaseAddress = new Uri("https://gmtk2022-rollofthedice-functions.azurewebsites.net"),
                 };
-                client.DefaultRequestHeaders.Add("x-functions-key", "V67cH-r1VRejKunHd5xjw1aTZen7zpppyUrzUNErL3baAzFuoLzwUA==");
+                client.DefaultRequestHeaders.Add("x-functions-key", "p9RXQa5NrV9VFGig-38NILM6Gt6sCGDwL5aHdKaMVqq4AzFu5NFtPQ==");
                 return client;
             });
 

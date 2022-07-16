@@ -25,6 +25,11 @@ namespace RollTheDiceGmtk2022.Game
 
         }
 
+        public Card()
+        {
+
+        }
+
         public string Name { get; set; }
         public int Hp { get; set; }
         public int Id { get; private set; }
