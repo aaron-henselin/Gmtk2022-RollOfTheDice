@@ -78,7 +78,7 @@ namespace RollTheDiceGmtk2022SolutionInjestor
             var scenarioId = Convert.ToInt32(parameters["scenario"]);
 
             var results = await GetSavedResultsAsync(scenarioId);
-            return new OkObjectResult(results);
+            return new OkObjectResult(results.Select(x => x.Turns).ToList());
 
         }
 
