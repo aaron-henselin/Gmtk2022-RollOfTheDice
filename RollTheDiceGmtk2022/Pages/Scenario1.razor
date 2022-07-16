@@ -62,6 +62,8 @@
             </div>
         </div>
     </div>
+
+    <div id="histogram" class="mt-2"></div>
 </div>
 
 
@@ -107,6 +109,7 @@
 @inject HttpClient HttpClient
 @inject BlazorTimer BlazorTimer
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 @code
 {
     ScenarioRegistrar scenarioRegistrar = new ScenarioRegistrar();
@@ -147,9 +150,6 @@
 
         BlazorTimer.SetTimer(500);
         BlazorTimer.OnElapsed += SimulationTick;
-
-
-
     }
 
     List<HistogramDataPoint> histogramDataPoints;
@@ -158,6 +158,13 @@
         histogramDataPoints = await HttpClient.GetFromJsonAsync<List<HistogramDataPoint>>("api/Histogram");
 
         await base.OnInitializedAsync();
+    }
+
+
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeAsync<string>("buildHistogram");
     }
 
 
