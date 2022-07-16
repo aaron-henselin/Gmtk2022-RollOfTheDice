@@ -135,8 +135,8 @@
     <script src='https://cdn.plot.ly/plotly-2.12.1.min.js'></script>
     <script>
         var x = [];
-        for (var i = 0; i < 500; i++) {
-            x[i] = Math.random();
+        for (var i = 0; i < 50000; i++) {
+            x[i] = (Math.random() * 100);
         }
 
         var trace = {
@@ -151,6 +151,7 @@
                 b: 20,
                 l: 20
             },
+            xaxis: { range: [0, 100] },
             shapes: [{
                 type: 'line',
                 x0: .5,
