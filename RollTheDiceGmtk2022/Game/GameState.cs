@@ -50,17 +50,16 @@ namespace RollTheDiceGmtk2022.Game
         public void AdvanceGameStateByPhase(DiceMatchRule rule)
         {
 
-            var roll = 0;// Rng.Roll(rule);
-            var roll = Rng.Roll(DiceMatchRule.Even);
+            var roll = Rng.Roll(rule);
             var matchingRules = DiceMatchRuleReader.GetMatchingRules(roll);
             var activeCard = PlayerHand.ActiveCard;
 
             var matchingRulesSet = new HashSet<DiceMatchRule>(matchingRules);
-            var playerCardSlotsToActivate = activeCard.Slots.Where(x => matchingRulesSet.Contains(x.Rule));
+            var playerCardSlotsToActivate = activeCard.Slots.Where(x => x.Rule != null && matchingRulesSet.Contains(x.Rule.Value));
             foreach (var slotToActivate in playerCardSlotsToActivate)
                 RunEffect(activeCard, slotToActivate.Effect, EnemyCard);
 
-            var enemyCardSlotsToActivate = EnemyCard.Slots.Where(x => matchingRulesSet.Contains(x.Rule));
+            var enemyCardSlotsToActivate = EnemyCard.Slots.Where(x => x.Rule != null && matchingRulesSet.Contains(x.Rule.Value));
             foreach (var slotToActivate in playerCardSlotsToActivate)
                 RunEffect(EnemyCard, slotToActivate.Effect, activeCard);
 
