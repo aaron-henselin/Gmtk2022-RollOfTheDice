@@ -104,12 +104,12 @@ namespace RollTheDiceGmtk2022SolutionInjestor
         async Task Create(SavedResult queueItem)
         {
             var container = client.GetContainer("GMTK", "SavedResult");
-            await container.CreateItemAsync(queueItem, new PartitionKey(queueItem.ScenarioId));
+            await container.CreateItemAsync(queueItem, new PartitionKey(queueItem.Id));
         }
         async Task Replace(SavedResult queueItem)
         {
             var container = client.GetContainer("GMTK", "SavedResult");
-            await container.ReplaceItemAsync(queueItem, queueItem.Id, new PartitionKey(queueItem.ScenarioId));
+            await container.ReplaceItemAsync(queueItem, queueItem.Id, new PartitionKey(queueItem.Id));
         }
 
 
