@@ -26,8 +26,11 @@
         width: 300px;
         min-width:300px;
         min-height: 395px;
-        background: url("card_back.png");
+        background: #C27258;
         background-size:100%;
+
+        -webkit-box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0); 
+        box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0);
     }
 
     .card-deck .card:first-child {
@@ -43,7 +46,13 @@
         background-size: 100%;
     }
 
-    
+    .list-group-item{
+        background:none;
+    }
+
+    .list-group-item .border-right{
+        border-color:#EE9463 !important;
+    }
 
     .card.missing-card:after {
         content: 'Place a card';
@@ -78,7 +87,11 @@
 
     .dice-match-rule-slot:empty {
         background-color: transparent;
-        border-color: #007bff;
+        border-color:#EE9463;
+        border-style: dotted;
+        border-width: 2px;
+        height: 50px;
+        width: 50px;
     }
 
     .card .dice-match-rule-slot {
@@ -95,11 +108,38 @@
     }
 
     .draggable-dice-match-rule {
-        height: 18px;
         position: relative;
         top: -5px;
         width: 50px;
+        height: 50px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-align: center;
+        line-height: 45px;
+        background:url("dice_background.png");
+        font-size: 0.8em;
+        text-shadow:0px 1px #90868a;
     }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #C27258;
+    }
+ 
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #EE9463; 
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #EE9463; 
+    }
+
 </style>
 
 <button id="run-button" @onclick="@(() => RunSimulation())">Run Simulation</button>
