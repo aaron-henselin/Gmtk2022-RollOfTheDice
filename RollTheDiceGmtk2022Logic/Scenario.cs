@@ -26,7 +26,7 @@ namespace RollTheDiceGmtk2022Logic
             {
                 AllowedCardDefinitions = new List<CardDefinition> {
                     KnownCardDefinitions.Paladin,
-                    KnownCardDefinitions.Cleric,
+                    KnownCardDefinitions.Rogue,
                 },
                 DiceMatchRulePool = new List<DiceMatchRule> { DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Six, DiceMatchRule.High },
                 Oracle = new List<DiceMatchRule> { DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Odd },
