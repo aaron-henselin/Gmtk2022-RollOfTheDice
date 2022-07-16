@@ -4,13 +4,20 @@ namespace RollTheDiceGmtk2022.Game
 {
     public static class DiceMatchRuleReader{
 
-        public static IReadOnlyCollection<DiceMatchRule> GetMatchingRules(int number)
+        public static IReadOnlyCollection<DiceMatchRule> GetMatchingRules(int roll)
         {
-            //todo:
-            List<DiceMatchRule> rules = new List<DiceMatchRule>();
-            if (number % 2 == 0)
-                rules.Add(DiceMatchRule.Even);
-            return rules;
+            var matchingRules = new List<DiceMatchRule>();
+            
+            if (DiceMatchRuleArbiter.SatisfiesRule(DiceMatchRule.Even, roll))
+                matchingRules.Add(DiceMatchRule.Even);
+            if (DiceMatchRuleArbiter.SatisfiesRule(DiceMatchRule.Odd, roll))
+                matchingRules.Add(DiceMatchRule.Odd);
+            if (DiceMatchRuleArbiter.SatisfiesRule(DiceMatchRule.High, roll))
+                matchingRules.Add(DiceMatchRule.High);
+            if (DiceMatchRuleArbiter.SatisfiesRule(DiceMatchRule.Low, roll))
+                matchingRules.Add(DiceMatchRule.Low);
+
+            return matchingRules;
         }
 
     }

@@ -16,30 +16,38 @@ namespace RollTheDiceGmtk2022.Game
 
         public void AdvanceGameState()
         {
-            var roll = Rng.Roll(DiceOracle.Even);
+            var roll = Rng.Roll(DiceMatchRule.Even);
             var matchingRules = DiceMatchRuleReader.GetMatchingRules(roll);
             var activeCard = PlayerHand.ActiveCard;
 
             var matchingRulesSet = new HashSet<DiceMatchRule>(matchingRules);
             var playerCardSlotsToActivate = activeCard.Slots.Where(x => matchingRulesSet.Contains(x.Rule));
             foreach (var slotToActivate in playerCardSlotsToActivate)
-                RunEffect(activeCard, slotToActivate.Effect);
+                RunEffect(activeCard, slotToActivate.Effect, EnemyCard);
 
             //todo: check for game-end states
 
             var enemyCardSlotsToActivate = EnemyCard.Slots.Where(x => matchingRulesSet.Contains(x.Rule));
             foreach (var slotToActivate in playerCardSlotsToActivate)
-                RunEffect(activeCard, slotToActivate.Effect);
+                RunEffect(EnemyCard, slotToActivate.Effect, activeCard);
 
         }
 
-        public void RunEffect(Card card, CardSlotEffect effect)
+        public void RunEffect(Card source, CardSlotEffect effect, Card target)
         {
-            //todo: actually do the effect
-            Console.WriteLine("run effect = "+ effect);
+            switch (effect.Type)
+            {
+                case CardSlotEffectType.Attack:
+                    target.Hp -= (int) effect.Amount;
+                    break;
+                case CardSlotEffectType.Heal:
+                    source.Hp += (int)effect.Amount;
+                    break;
+            }
+            
         }
 
-        
+
 
     }
 

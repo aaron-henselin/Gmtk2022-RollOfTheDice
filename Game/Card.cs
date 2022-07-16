@@ -8,7 +8,7 @@ namespace RollTheDiceGmtk2022.Game
     {
         public Card(CardDefinition definition)
         {
-            //todo: create card from definition
+            Hp = definition.Hp;
         }
 
         public int Hp { get; set; }
@@ -17,7 +17,12 @@ namespace RollTheDiceGmtk2022.Game
 
     public class CardSlot
     {
-        public DiceMatchRule Rule { get; set; }
+        public CardSlot(SlotDefinition definition)
+        {
+            Effect = definition.Effect;
+        }
+
+        public DiceMatchRule? Rule { get; set; }
         public CardSlotEffect Effect { get; set; }
     }
 
