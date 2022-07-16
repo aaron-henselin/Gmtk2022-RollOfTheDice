@@ -2,22 +2,102 @@
 
 @using RollTheDiceGmtk2022.Game
 
+<style>
+    .board {
+        border: 1px solid gray;
+    }
+
+    .card{
+        border: 1px solid lightgray;
+        padding: 5px;
+        border-radius: 5px;
+        height: 300px;
+        width: 200px;
+    }
+
+    .card-top {
+        
+        height: 150px;
+        text-align: center;
+    }
+
+    .card-bottom {
+        height: 150px;
+    }
+
+    .card-slot {
+        border-top: 1px solid lightgray;
+        height: 50px
+    }
+
+    .card-slot-rule-container {
+
+    }
+</style>
+
 <h3>
     1. A bridge (not too far)
 </h3>
 <small>Reach the banner.</small>
 
-
-
-
 <button id="run-button" @onclick="@(() => RunSimulation())"></button>
-@foreach (var card in ScenarioCards.Values)
-{
-    
-}
 
 
-@inject BlazorTimer BlazorTimer
+<div class="container">
+    <div class="board">
+        <div class="row">
+            <div class="col-3">
+
+            </div>
+
+            <div class="col-9">
+                <div class="mb-3">
+                    @foreach (var card in PlacedCards.Values)
+                    {
+                        <div class="card">
+                            <div class="card-top">
+                                <div>Id: @card.Id</div>
+                                <div>Hp: @card.Hp</div>
+                            </div>
+
+                            <div class="card-bottom">
+                                @foreach (var slot in card.Slots)
+                                {
+                                    <div class="card-slot">
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <div class="card-slot-rule-container">
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-9">
+                                                @slot.Effect.Name (@slot.Effect.Type.ToString() : @slot.Effect.Amount)
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div>
+                    <div class="draggable-rules-container">
+                        @foreach (var x in y)
+                        {
+                            <div class="draggable-rule" draggable="true" @ondragstart="@(() => HandleDragStart(number))"></div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
 @inject NavigationManager NavigationManager
 @code
 {
@@ -89,6 +169,12 @@
     {
         var gs = new GameState();
         
+    }
+
+    private void HandleDragStart(FloorCoord i)
+    {
+        //Console.WriteLine($"HandleDragStart {i}");
+        Payload = i;
     }
 
     private void StartTimer()
