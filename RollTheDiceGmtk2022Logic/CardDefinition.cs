@@ -102,7 +102,7 @@ namespace RollTheDiceGmtk2022.Game
 
         public static CardDefinition PlagueRats = new CardDefinition
         {
-            Name = "Plague Rats",
+            Name = "Big Rats",
             Hp = 50,
             Slots = new List<SlotDefinition> {
                 new SlotDefinition {

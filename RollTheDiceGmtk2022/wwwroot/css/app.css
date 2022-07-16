@@ -107,6 +107,7 @@ h3 {
     font-family: 'Heorot';
     font-size: 250%;
     color: #EE9463;
+    text-shadow: 0px 1px 0px #000;
 }
 
 .hp {
@@ -117,6 +118,7 @@ h3 {
     margin-right: 10px;
     padding: 5px;
     vertical-align: middle;
+    letter-spacing: 1.5px;
 }
 
 .dice-match-rule {
@@ -127,13 +129,14 @@ h3 {
     letter-spacing: 2px;
     text-transform: uppercase;
     text-align: center;
-    line-height: 45px;
+    line-height: 50px;
     background: url("../dice_background.png");
     font-size: 0.8em;
     text-shadow: 0px 1px #90868a;
 }
 
 .dice-match-rule:empty {
+    background:none;
     background-color: transparent;
     border-color: #EE9463;
     border-style: dotted;
