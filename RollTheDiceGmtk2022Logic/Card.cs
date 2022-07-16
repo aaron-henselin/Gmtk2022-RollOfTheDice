@@ -55,6 +55,11 @@ namespace RollTheDiceGmtk2022.Game
             this.Effect = new CardSlotEffect(slot.Effect);
         }
 
+        public CardSlot()
+        {
+
+        }
+
         public DiceMatchRule? Rule { get; set; }
         public CardSlotEffect Effect { get; set; }
     }
