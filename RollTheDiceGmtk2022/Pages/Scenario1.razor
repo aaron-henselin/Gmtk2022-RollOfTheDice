@@ -78,6 +78,16 @@
 
 <OutcomePrediction Outcome=@ExpectedOutcome></OutcomePrediction>
 
+@if (histogramDataPoints != null)
+{
+    <pre>
+        foreach (var point in histogramDataPoints)
+        {
+            <text>@point.Turns</text>
+        }
+    </pre>    
+}
+
 <pre>
 ********************* DEBUG *********************
 @if (this.gs != null)
@@ -98,6 +108,7 @@
 ********************* DEBUG *********************
 </pre>
 
+@inject HttpClient HttpClient
 @inject BlazorTimer BlazorTimer
 @inject NavigationManager NavigationManager
 @code
@@ -141,6 +152,22 @@
         BlazorTimer.SetTimer(500);
         BlazorTimer.OnElapsed += SimulationTick;
 
+
+
+    }
+
+    List<HistogramDataPoint> histogramDataPoints;
+    protected async override Task OnInitializedAsync()
+    {
+        histogramDataPoints = await HttpClient.GetFromJsonAsync<List<HistogramDataPoint>>("api/Histogram");
+
+        await base.OnInitializedAsync();
+    }
+
+
+    private class HistogramDataPoint
+    {
+        public int Turns{ get; set; }
     }
 
     private bool IsPlaced(int cardId)

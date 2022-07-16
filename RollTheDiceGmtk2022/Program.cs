@@ -21,6 +21,16 @@ namespace RollTheDiceGmtk2022
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddTransient<BlazorTimer>();
 
+            builder.Services.AddScoped(sp =>
+            {
+                var client = new HttpClient
+                {
+                    BaseAddress = new Uri("https://gmtk2022-rollofthedice-functions.azurewebsites.net"),
+                };
+                client.DefaultRequestHeaders.Add("x-functions-key", "V67cH-r1VRejKunHd5xjw1aTZen7zpppyUrzUNErL3baAzFuoLzwUA==");
+                return client;
+            });
+
             await builder.Build().RunAsync();
         }
     }
