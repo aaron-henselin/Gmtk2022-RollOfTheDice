@@ -68,7 +68,7 @@ namespace RollTheDiceGmtk2022.Game
                 return true;
 
             timer.DiceIndex++;
-            if (timer.DiceIndex == 5)
+            if (timer.DiceIndex == DiceOracle.Count)
             {
                 timer.DiceIndex = 0;
                 timer.TurnNumber++;
@@ -85,7 +85,7 @@ namespace RollTheDiceGmtk2022.Game
             foreach (var slotToActivate in playerCardSlotsToActivate)
             {
                 var nextDiceIndex = timer.DiceIndex + 1;
-                if (nextDiceIndex == 5)
+                if (nextDiceIndex == DiceOracle.Count)
                     nextDiceIndex = 0;
 
                 if (slotToActivate.Effect.Type == CardSlotEffectType.Command)
