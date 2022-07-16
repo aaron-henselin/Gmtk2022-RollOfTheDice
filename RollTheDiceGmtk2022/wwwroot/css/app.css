@@ -103,10 +103,6 @@ h3 {
     letter-spacing: 1px;
 }
 
-.card-columns.card-hand .card {
-    margin-bottom: 100px;
-}
-
 .card-deck .card:first-child {
     margin-left: 0;
 }

@@ -3,9 +3,6 @@
 @using RollTheDiceGmtk2022.Game
 @using RollTheDiceGmtk2022Logic
 
-<button id="run-button" @onclick="@(() => RunSimulation())">Run Simulation</button>
-
-
 <div class="container-fluid">
     <div class="board mt-5">
         <div class="row">
@@ -45,18 +42,20 @@
                     }
                 </div>
 
-                <div class="mt-2 p-2">
+                <div class="mt-2 text-left">
                     @foreach (var kvp in DiceMatchRuleDashboard)
                     {
                         var rule = kvp.Value;
                         var diceMatchRuleLocation = new DiceMatchRuleLocation(true, kvp.Key);
 
-                        <span class="bg-white border-primary draggable-dice-match-rule-receiver" ondragover="event.preventDefault();" @ondrop="@(() => HandleDiceRuleDragStop(diceMatchRuleLocation))">
-                            @if (rule != null)
-                            {
-                                <span class="dice-match-rule draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(diceMatchRuleLocation))">@rule.Value</span>
-                            }
-                        </span>
+                        @if (rule != null)
+                        {
+                            <span class="dice-match-rule draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(diceMatchRuleLocation))">@rule.Value</span>
+                        }
+                        else
+                        {
+                            <span class="dice-match-rule"></span>
+                        }
                     }
                 </div>
             </div>

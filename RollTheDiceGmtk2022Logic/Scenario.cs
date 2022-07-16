@@ -29,7 +29,7 @@ namespace RollTheDiceGmtk2022Logic
                     KnownCardDefinitions.Rogue,
                 },
                 DiceMatchRulePool = new List<DiceMatchRule> { DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Six, DiceMatchRule.High },
-                Oracle = new List<DiceMatchRule> { DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Even, DiceMatchRule.Odd },
+                Oracle = new List<DiceMatchRule> { DiceMatchRule.Even, DiceMatchRule.Even, DiceMatchRule.Odd },
                 EnemyCard = EnemyCardFactory.BuildPlagueRats()
             });
         }
