@@ -124,6 +124,10 @@
 
 
 <button id="run-button" @onclick="@(() => RunSimulation())">RUN</button>
+@if (this.gs != null && isRunning)
+{
+    <button id="run-button" @onclick="@(() => StopSimulation())">STOP</button>    
+}
 
 <pre>
 ********************* DEBUG *********************
@@ -247,7 +251,16 @@
     private void SimulationTick()
     {
         if (isRunning && !gs.IsGameEnded){
-            gs.AdvanceGameState();
+            try
+            {
+                gs.AdvanceGameState();
+            }
+            catch (Exception ex)
+            {
+                gs.Log.Add(ex.Message);    
+                gs.Log.Add(ex.StackTrace);
+            }
+            
             this.StateHasChanged();
         }
     }
