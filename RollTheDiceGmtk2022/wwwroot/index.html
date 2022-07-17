@@ -143,7 +143,7 @@
             var pointsJson = $histogram.attr('data-points');
             var points = JSON.parse(pointsJson);
 
-            if (points === null) {
+            if (points === undefined || points === null) {
                 return;
             }
 

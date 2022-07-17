@@ -173,11 +173,11 @@
     }
 
     List<int> histogramDataPoints;
-    protected async override Task OnInitializedAsync()
+    protected async override Task OnParametersSetAsync()
     {
         histogramDataPoints = await HttpClient.GetFromJsonAsync<List<int>>($"api/Histogram?scenario={ScenarioIndex}");
 
-        await base.OnInitializedAsync();
+        await base.OnParametersSetAsync();
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
