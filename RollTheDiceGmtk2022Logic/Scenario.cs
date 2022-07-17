@@ -60,7 +60,7 @@ namespace RollTheDiceGmtk2022Logic
                     KnownCardDefinitions.Rogue,
                 },
                 DiceMatchRulePool = new List<DiceMatchRule> { DiceMatchRule.Six, DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.High },
-                Oracle = new List<DiceMatchRule> { DiceMatchRule.Low, DiceMatchRule.Six, DiceMatchRule.Low },
+                Oracle = new List<DiceMatchRule> { DiceMatchRule.Low, DiceMatchRule.Six, DiceMatchRule.High },
                 EnemyCard = EnemyCardFactory.BuildCyclops()
             });
         }
