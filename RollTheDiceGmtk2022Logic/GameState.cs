@@ -144,7 +144,7 @@ namespace RollTheDiceGmtk2022.Game
                 foreach (var slotToActivate in enemyCardSlotsToActivate)
                 {
                     var targetCard = slotToActivate.Effect.Type == CardSlotEffectType.Heal ? EnemyCard : activePlayerCard;
-                    RunEffect(EnemyCard, slotToActivate.Effect, activePlayerCard);
+                    RunEffect(EnemyCard, slotToActivate.Effect, targetCard);
                 }
                     
             }

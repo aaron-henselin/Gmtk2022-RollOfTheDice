@@ -1,5 +1,6 @@
 ﻿@using RollTheDiceGmtk2022.Game
 @using RollTheDiceGmtk2022Logic
+@using System.Threading
 
 @if (Scenario != null)
 {
@@ -147,7 +148,8 @@
 
 
         BlazorTimer.SetTimer(500);
-        BlazorTimer.OnElapsed += SimulationTick;
+        //BlazorTimer.OnElapsed += SimulationTick;
+
     }
 
     protected override void OnParametersSet()
@@ -182,7 +184,9 @@
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
+        await JSRuntime.InvokeAsync<string>("animateTurnPrediction", CurrentNumberOfTurnsToWin);
         await JSRuntime.InvokeAsync<string>("buildHistogram");
+
     }
 
 
@@ -272,13 +276,13 @@
 
                     try
                     {
-                        var task = HttpClient.PostAsJsonAsync("api/injest?scenario=0", this.PlacedCards);
-                        task.ConfigureAwait(false);
-                        task.Start();                        
+                       // var task = HttpClient.PostAsJsonAsync($"api/injest?scenario={ScenarioIndex}", this.PlacedCards);
+                       // task.ConfigureAwait(false);
+                       // task.RunSynchronously();
                     }
                     catch (Exception ex)
                     {
-                        
+
                     }
 
 
@@ -286,7 +290,7 @@
                 }
             }
 
-            JSRuntime.InvokeAsync<string>("animateTurnPrediction", CurrentNumberOfTurnsToWin);
+
         }
 
         if (isRunning && !gs.IsGameEnded){
@@ -305,6 +309,7 @@
             }
 
             this.StateHasChanged();
+
         }
     }
 
