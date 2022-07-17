@@ -79,20 +79,23 @@ namespace RollTheDiceGmtk2022.Game
             return false;
         }
 
-        private void ActivatePlayerCardSlots(Card activePlayerCard, HashSet<DiceMatchRule> matchingRulesSet)
+        private void ActivatePlayerCardSlots(int thisDiceIndex, Card cardToActivate, HashSet<DiceMatchRule> matchingRulesSet)
         {
-            var playerCardSlotsToActivate = activePlayerCard.Slots.Where(x => x.Rule != null && matchingRulesSet.Contains(x.Rule.Value)).ToList();
-            foreach (var slotToActivate in playerCardSlotsToActivate)
+            var slotsToActivate = cardToActivate.Slots.Where(x => x.Rule != null && matchingRulesSet.Contains(x.Rule.Value)).ToList();
+            foreach (var slotToActivate in slotsToActivate)
             {
-                var nextDiceIndex = timer.DiceIndex + 1;
+                var nextDiceIndex = thisDiceIndex + 1;
                 if (nextDiceIndex == DiceOracle.Count)
-                    nextDiceIndex = 0;
+                    nextDiceIndex = -1;
 
                 if (slotToActivate.Effect.Type == CardSlotEffectType.Command)
                 {
+                    if (nextDiceIndex == -1)
+                        return;
+
                     var otherCard = PlayerHand.Cards[nextDiceIndex];
                     if (otherCard != null && timer.DiceIndex != nextDiceIndex) //can't activate the same card.
-                        ActivatePlayerCardSlots(otherCard, matchingRulesSet);
+                        ActivatePlayerCardSlots(nextDiceIndex,otherCard, matchingRulesSet);
                     else
                     {
                         Log.Add("Tried to activate command, but could not.");
@@ -106,9 +109,16 @@ namespace RollTheDiceGmtk2022.Game
                     if (slotToActivate.Effect.Type == CardSlotEffectType.Heal ||
                         slotToActivate.Effect.Type == CardSlotEffectType.DamageBuff ||
                         slotToActivate.Effect.Type == CardSlotEffectType.Evade)
-                        targetCard = PlayerHand.Cards[nextDiceIndex];
+                    {
+                        
+                        if (nextDiceIndex == -1)
+                            return;
 
-                    RunEffect(activePlayerCard, slotToActivate.Effect, EnemyCard);
+                        targetCard = PlayerHand.Cards[nextDiceIndex];
+                    }
+                        
+
+                    RunEffect(cardToActivate, slotToActivate.Effect, EnemyCard);
                 }
 
             }
@@ -129,7 +139,7 @@ namespace RollTheDiceGmtk2022.Game
             if (activePlayerCard != null && !activePlayerCard.IsDead)
             {
                 Log.Add("Player card activating:" + activePlayerCard.Id);
-                ActivatePlayerCardSlots(activePlayerCard,activationCriteria);
+                ActivatePlayerCardSlots(timer.DiceIndex,activePlayerCard,activationCriteria);
             }
             else
             {

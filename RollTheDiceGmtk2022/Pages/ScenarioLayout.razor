@@ -148,7 +148,7 @@
 
 
         BlazorTimer.SetTimer(500);
-        //BlazorTimer.OnElapsed += SimulationTick;
+        BlazorTimer.OnElapsed += SimulationTick;
 
     }
 
@@ -276,9 +276,9 @@
 
                     try
                     {
-                       // var task = HttpClient.PostAsJsonAsync($"api/injest?scenario={ScenarioIndex}", this.PlacedCards);
-                       // task.ConfigureAwait(false);
-                       // task.RunSynchronously();
+                       var task = HttpClient.PostAsJsonAsync($"api/injest?scenario={ScenarioIndex}", this.PlacedCards);
+                       task.ConfigureAwait(false);
+                       task.Start();
                     }
                     catch (Exception ex)
                     {
