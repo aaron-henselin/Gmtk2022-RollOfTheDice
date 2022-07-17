@@ -42,31 +42,49 @@
 </style>
 
 <h3>Intro</h3>
+<p>
+    The goddess Tyche is playing with the fate of Greece and it's your job to set things right! Fight luck itself with ancient prophecies and probabilities to keep fickle fortune from changing history! 
+    
+</p>
+
+<p>
+    On a visit to Delphi and the Temple of Apollo, your paltry questions for the Oracle are ignored.
+    Instead you are delivered a prophecy: Heed the Oracles and prevent Tyche from twisting the Fates' design with her luck and random chance! Given little choice in the matter, your journey through legend begins.
+
+
+</p>
+
+
+<h3>How To Play</h3>
 
 <img src="Tutorial.png" style="max-height:600px;" />
 <p>
-    <b>Tyche</b> is a game about tactics that are viable <b>despite</b> the harsh mistress of lady luck.
-    You devise a one-time strategy that attempts to maximize the overall probability of success and minimize the overall turns required to defeat the *Enemy Cards*.
-    You'll have a little help along the way. Your *Oracle Bar* narrows down the RNG, giving you a hint of what a card at a position will encounter for its roll during the turn.
+    <b>Tyche</b> is a game about carving out victory <b>despite</b> the whims of the goddess of fortune and her accursed RNG.
+    You build a strategy that maximizes your parties' chance of success while minimizing the number of turns required to defeat the *Enemy Cards* of the scenario.
+    You're not alone! The Oracle has offered prophecies in each scenario to fight against random chance. Using that knowledge is the key to reliable victory! History should be set in stone, right?'
 </p>
 <p>
-    A single roll of the dice determines both the abilities that a character activates, and also the attacks that the enemy will levy.
-    Drag dice from the *Ability Dice* to the card to enable abilities.
+    Select characters in each scenario to take position on the battlefield. A single roll of the six sided die determines what actions, if any, the character and enemy take for a given position.
+    Drag dice from the *Ability Dice* to the character cards to activate abilties when the roll matches the criteria 
+</p>
+
+<p>
+    END OF TURN: A turn moves moves from position 1 to 3 with each character using all of it's slotted abilities. The next turn begins back at position 1.
 </p>
 <p>
-    END OF TURN: Once every character has completed its abilities, the next turn begins, starting back at position 1.
+    VICTORY: One success is not enough to stop Tyche! Every strategy is played out 5 times to see just how far luck is carrying you to each victory.
 </p>
 
 <button @onclick="@(() => Navigate(1))" class="btn btn-light btn-lg">
     <h1 class="number">1</h1>
     <h5>Chapter One</h5>
-    <h6>The same way we always begin</h6>
+    <h6>The Same Way We Always Begin</h6>
 </button>
 <button @onclick="@(() => Navigate(2))" class="btn btn-light  btn-lg">
     <h1 class="number">2</h1>
     <h5>Chapter Two</h5>
     <h6>
-        Snakes. Why is it always snakes?!
+        Snakes. Why is it Always Snakes?!
     </h6>
 </button>
 
@@ -74,7 +92,7 @@
     <h1 class="number">3</h1>
     <h5>Chapter Three</h5>
     <h6>
-        Have big stick, will travel.
+        Have Big stick, Will Travel.
     </h6>
 </button>
 
