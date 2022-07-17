@@ -28,7 +28,7 @@
                                 <div class="oracle-dice-match-container">
                                     <span class="turn-number">@turnNumber</span>
                                     <span class="dice-match-rule bob-on-hover">@oracle</span>
-                                    <span class="turn-progression">&rarr;</span>
+                                    @*<span class="turn-progression">&rarr;</span>*@
                                 </div>
 
                                 <div class="missing-card-instructions">
@@ -62,11 +62,11 @@
 
                         @if (rule != null)
                         {
-                            <span class="dice-match-rule draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(diceMatchRuleLocation))">@rule.Value</span>
+                            <span class="dice-match-rule draggable-dice-match-rule" draggable="true" @ondragstart="@(() => HandleDiceRuleDragStart(diceMatchRuleLocation))" ondragover="event.preventDefault();" @ondrop="@(() => HandleDiceRuleDragStop(diceMatchRuleLocation))">@rule.Value</span>
                         }
                         else
                         {
-                            <span class="dice-match-rule"></span>
+                            <span class="dice-match-rule" ondragover="event.preventDefault();" @ondrop="@(() => HandleDiceRuleDragStop(diceMatchRuleLocation))"></span>
                         }
                     }
                 </div>

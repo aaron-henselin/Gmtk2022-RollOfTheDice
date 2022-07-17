@@ -54,7 +54,7 @@ a, .btn-link {
     }
 
 h3 {
-    font-family: 'heorot';
+    font-family: 'DisneyHeroic';
 }
 
 .oracle-dice-match-container {
@@ -70,10 +70,6 @@ h3 {
     background-position-y: 20px;
     background-repeat: no-repeat;
     padding: 5px;
-}
-
-.dice-table .dice-match-rule {
-    box-shadow: 2px 2px 6px 1px #000;
 }
 
 .card-hand {
@@ -92,6 +88,7 @@ h3 {
     font-size: 3em;
     color: white;
     text-shadow: -1px 1px 3px black;
+    font-family: 'DisneyHeroic';
 }
 
 .oracle-dice-match-container {
@@ -187,6 +184,7 @@ h3 {
     padding: 5px;
     vertical-align: middle;
     letter-spacing: 1.5px;
+    font-family: 'DisneyHeroic';
 }
 
 button.close.remove-card {
@@ -218,11 +216,14 @@ button.close.remove-card span {
     font-size: 0.8em;
     text-shadow: 0px 1px #90868a;
     vertical-align: top;
-    
 }
 
 .dice-match-rule + .dice-match-rule {
     margin-left: 10px;
+}
+
+.dice-table .dice-match-rule:not(:empty) {
+    box-shadow: 2px 2px 6px 1px #000;
 }
 
 .dice-match-rule:empty {
