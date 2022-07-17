@@ -246,7 +246,7 @@
                 allOutcomes.Add(thisOutcome);
             }
             ExpectedOutcome = new GameOutcomeProbability(allOutcomes);
-            CurrentNumberOfTurnsToWin = 0;
+            CurrentNumberOfTurnsToWin = null;
             if (ExpectedOutcome.Won > .9m)
             {
                 var fastest = allOutcomes.Where(x => x.Won).Min(x => x.EndingTurn);

@@ -194,31 +194,48 @@
             Plotly.newPlot('histogram', data, layout);
         }
 
-        function animateTurnPrediction(currentPrediction) {
-            var $turnPrediction = $(this);
-            //var currentPredictionRaw = $turnPrediction.text();
-            //var currentPrediction = parseInt(currentPredictionRaw);
+        var currentPrediction = 0;
+        var turnPredictionCountUpInterval = null;
 
-            if (isNaN(currentPrediction)) {
-                currentPrediction = 0;
+        function animateTurnPrediction(newPrediction) {
+            var $turnPrediction = $("#turn-prediction");
+
+            if (newPrediction === null) {
+                $turnPrediction.text("Fail");
+                return;
             }
-
-            var newPredictionRaw = $turnPrediction.attr("data-new-prediction");
-            var newPrediction = parseInt(newPredictionRaw);
-
-            newPrediction = (Math.random() * 100) / 1;
+            
+            newPrediction = (newPrediction * 100);
 
             var curr = currentPrediction;
 
-            var turnPredictionCountUpInterval = window.setInterval(function () {
-                curr++;
+            if (newPrediction == currentPrediction) {
+                return;
+            } else {
+                currentPrediction = newPrediction;
+            }
 
-                $turnPrediction.text(curr);
+            if (turnPredictionCountUpInterval != null) {
+                stopTurnAnimation();
+            }
 
+            turnPredictionCountUpInterval = window.setInterval(function () {
                 if (curr == newPrediction) {
-                    window.clearInterval(turnPredictionCountUpInterval);
+                    stopTurnAnimation();
+                } else {
+                    var diff = newPrediction - curr;
+                    var adjustment = diff < 0 ? -1 : 1;
+
+                    curr = curr + adjustment;
+
+                    $turnPrediction.text(curr);
                 }
-            }, 100);
+            }, 10);
+        }
+
+        function stopTurnAnimation() {
+            window.clearInterval(turnPredictionCountUpInterval);
+            turnPredictionCountUpInterval = null;
         }
     </script>
 </body>

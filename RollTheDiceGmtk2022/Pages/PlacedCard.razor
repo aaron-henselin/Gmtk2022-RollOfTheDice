@@ -1,7 +1,11 @@
 ﻿@using RollTheDiceGmtk2022.Game
 @using RollTheDiceGmtk2022Logic
 
-<div class="card" draggable="true" @ondragstart="@(() => HandleDragStart(Location))" ondragover="event.preventDefault();" @ondrop="@(() => HandleDragStop(Location))">
+@{
+    var cardClass = IsEnemy ? "enemy-card" : "user-card";
+}
+
+<div class="card @cardClass" draggable="true" @ondragstart="@(() => HandleDragStart(Location))" ondragover="event.preventDefault();" @ondrop="@(() => HandleDragStop(Location))">
     @if (!IsEnemy)
     {
         <div class="oracle-dice-match-container">
