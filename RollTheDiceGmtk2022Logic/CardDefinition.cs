@@ -35,7 +35,8 @@ namespace RollTheDiceGmtk2022.Game
         public static CardSlotEffect Spear = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.Attack, Name = "Spear", Description = "Spear" };
 
 
-        public static CardSlotEffect HydraAttack = new CardSlotEffect { Amount = 50, Type = CardSlotEffectType.Attack, Name = "Chomp", Description = "You dodged 8 heads! Ouch." };
+        public static CardSlotEffect HydraAttack = new CardSlotEffect { Amount = 25, Type = CardSlotEffectType.Attack, Name = "Chomp", Description = "You dodged 8 heads! Ouch." };
+        public static CardSlotEffect HydraBigAttack = new CardSlotEffect { Amount = 50, Type = CardSlotEffectType.Attack, Name = "Chomp Chomp", Description = "You dodged 8 heads! Ouch." };
         public static CardSlotEffect HydraHeal = new CardSlotEffect { Amount = 15, Type = CardSlotEffectType.Heal, Name = "Regenerate", Description = "The Hydra's legendary healing is largely embellished" };
 
         public static CardSlotEffect CyclopsAttack = new CardSlotEffect { Amount = 5, Type = CardSlotEffectType.Attack, Name = "Smack", Description = "Playful, but still punishing!" };
@@ -173,7 +174,7 @@ namespace RollTheDiceGmtk2022.Game
             Hp = 400,
             Slots = new List<SlotDefinition> {
                 new SlotDefinition {
-                    Effect = KnownCardSlotEffects.HydraAttack
+                    Effect = KnownCardSlotEffects.HydraBigAttack
                 },
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.HydraHeal
