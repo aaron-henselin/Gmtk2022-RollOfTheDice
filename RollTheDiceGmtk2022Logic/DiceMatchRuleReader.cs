@@ -16,6 +16,8 @@ namespace RollTheDiceGmtk2022.Game
                 matchingRules.Add(DiceMatchRule.High);
             if (DiceMatchRuleArbiter.SatisfiesRule(DiceMatchRule.Low, roll))
                 matchingRules.Add(DiceMatchRule.Low);
+            if (DiceMatchRuleArbiter.SatisfiesRule(DiceMatchRule.Six, roll))
+                matchingRules.Add(DiceMatchRule.Six);
 
             return matchingRules;
         }
