@@ -71,7 +71,11 @@
         </div>
     </div>
 
-    <div id="histogram"></div>
+    @{
+        var histogramDataPointsJson = System.Text.Json.JsonSerializer.Serialize(histogramDataPoints);
+    }
+
+    <div id="histogram" data-points="@histogramDataPointsJson" data-your-fastest-this-session="@FastestNumberOfTurnsToWinThisSession"></div>
 </div>
 
 
@@ -83,16 +87,6 @@
 }
 
 <OutcomePrediction Outcome=@ExpectedOutcome></OutcomePrediction>
-
-@if (histogramDataPoints != null)
-{
-    <pre>
-        @foreach (var point in histogramDataPoints)
-        {
-            <text>@point</text>
-        }
-    </pre>    
-}
 
 <pre>
 ********************* DEBUG *********************
@@ -168,10 +162,10 @@
         await base.OnInitializedAsync();
     }
 
-
-
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
+
+
         await JSRuntime.InvokeAsync<string>("buildHistogram");
     }
 
@@ -232,6 +226,8 @@
     }
 
     GameOutcomeProbability ExpectedOutcome { get; set; }
+    int? FastestNumberOfTurnsToWinThisSession { get; set; }
+
     object gsLock = new object();
 
     int? bestRecord = null;
@@ -250,8 +246,11 @@
             if (ExpectedOutcome.Won > .9m)
             {
                 var fastest = allOutcomes.Where(x => x.Won).Min(x => x.EndingTurn);
+
                 if (bestRecord == null || bestRecord > fastest)
                 {
+                    FastestNumberOfTurnsToWinThisSession = fastest + 1; // fastest is zero based index
+
                     try
                     {
                         var task = HttpClient.PostAsJsonAsync("api/injest?scenario=0", this.PlacedCards);
