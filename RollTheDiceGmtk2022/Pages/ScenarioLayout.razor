@@ -23,8 +23,8 @@
                         {
                             <div class="card missing-card" ondragover="event.preventDefault();" @ondrop="@(() => HandleCardDragStop(cardLocation))">
                                 <div class="oracle-dice-match-container">
-                                    <span class="dice-match-rule">@oracle</span>
                                     <span class="turn-number">@turnNumber</span>
+                                    <span class="dice-match-rule bob-on-hover">@oracle</span>
                                     <span class="turn-progression">&rarr;</span>
                                 </div>
 
