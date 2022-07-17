@@ -91,8 +91,12 @@ namespace RollTheDiceGmtk2022.Game
                 if (slotToActivate.Effect.Type == CardSlotEffectType.Command)
                 {
                     var otherCard = PlayerHand.Cards[nextDiceIndex];
-                    if (otherCard != null && timer.DiceIndex == nextDiceIndex) //can't activate the same card.
+                    if (otherCard != null && timer.DiceIndex != nextDiceIndex) //can't activate the same card.
                         ActivatePlayerCardSlots(otherCard, matchingRulesSet);
+                    else
+                    {
+                        Log.Add("Tried to activate command, but could not.");
+                    }
                 }
                 else
                 {
