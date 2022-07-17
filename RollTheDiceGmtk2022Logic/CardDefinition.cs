@@ -36,7 +36,7 @@ namespace RollTheDiceGmtk2022.Game
 
 
         public static CardSlotEffect HydraAttack = new CardSlotEffect { Amount = 25, Type = CardSlotEffectType.Attack, Name = "Chomp", Description = "Chomp" };
-        public static CardSlotEffect HydraHeal = new CardSlotEffect { Amount = 15, Type = CardSlotEffectType.Attack, Name = "Heal", Description = "Heal" };
+        public static CardSlotEffect HydraHeal = new CardSlotEffect { Amount = 15, Type = CardSlotEffectType.Heal, Name = "Heal", Description = "Heal" };
     }
 
     public class EnemyCardFactory
