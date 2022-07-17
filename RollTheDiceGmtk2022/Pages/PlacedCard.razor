@@ -42,6 +42,12 @@
             var slot = Card.Slots[i];
             var rule = slot.Rule;
             DiceMatchRuleLocation? diceMatchRuleLocation = new DiceMatchRuleLocation(false, Location.CollectionIndex, i);
+            var effectTitle = slot.Effect.Name;
+
+            if (slot.Effect.Type == CardSlotEffectType.Attack)
+            {
+                effectTitle += $" ({slot.Effect.Amount})";
+            }
 
             <li class="list-group-item">
                 <div class="row">
@@ -50,8 +56,8 @@
                     </div>
 
                     <div class="col-8">
-                        <div><strong>@slot.Effect.Name</strong></div>
-                        <div>@slot.Effect.Type.ToString() : @slot.Effect.Amount</div>
+                        <div><strong>@effectTitle</strong></div>
+                        <div class="card-effect-description">@slot.Effect.Type.ToString() : @slot.Effect.Amount</div>
                     </div>
                 </div>
             </li>
