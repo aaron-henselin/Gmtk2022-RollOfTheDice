@@ -1,10 +1,15 @@
 ﻿@using RollTheDiceGmtk2022.Game
 @if (Outcome != null)
 {
-    <h3>Prediction</h3>
-    <h3>Won: @Outcome.Won.ToString("P")</h3>
-    <h3>IsDraw: @Outcome.IsDraw.ToString("P")</h3>
-    <h3>AllPartyMembersSurvived: @Outcome.AllPartyMembersSurvived.ToString("P")</h3>    
+    <h3 style="margin-top: 20px;text-align:left;">The gods say...</h3>
+    <table style="text-align:left;">
+        <tr>
+            <td>Win Percentage</td><td> @Outcome.Won.ToString("P")</td>
+        </tr>
+        <tr>
+            <td>100% Survival Percentage</td><td>@Outcome.AllPartyMembersSurvived.ToString("P")</td>
+        </tr>
+    </table>
 }
 
 @code {
