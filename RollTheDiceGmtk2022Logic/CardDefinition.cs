@@ -24,9 +24,12 @@ namespace RollTheDiceGmtk2022.Game
         public static CardSlotEffect Evade = new CardSlotEffect { Amount = 25, Type = CardSlotEffectType.Evade, Name = "Evade",Description="Switch positions with the character in the back row, the character in the back row will take the turn instead." };
         public static CardSlotEffect Command = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.Command, Name="Command",Description = "Execute the action of the character in the back row." };
         public static CardSlotEffect ShieldWall = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.ShieldWall, Name = "Shield Wall", Description = "Take 0 damage from the first attack this turn." };
+        public static CardSlotEffect Halberd = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.Attack, Name = "Halberd" };
 
         public static CardSlotEffect Longbow = new CardSlotEffect { Amount = 20, Type = CardSlotEffectType.Attack, Name = "Longbow" };
+
         public static CardSlotEffect LayOnHands = new CardSlotEffect { Amount = 30, Type = CardSlotEffectType.Heal, Name = "Lay On Hands",Description = "Heal the character in the back row." };
+        public static CardSlotEffect HealingWords = new CardSlotEffect { Amount = 5, Type = CardSlotEffectType.Heal, Name = "Healing Aura", Description = "Heals all characters." };
         public static CardSlotEffect HealingHerbsAndSpices = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.Heal, Name = "Healing Herbs And Spices", Description = "Heal the character in the back row." };
         public static CardSlotEffect TollOfTheDead = new CardSlotEffect { Amount = 1.1m, Type = CardSlotEffectType.DamageBuff, Name = "DMG +", Description = "DMG * 1.1 for the character in the back row" };
     }
@@ -87,7 +90,7 @@ namespace RollTheDiceGmtk2022.Game
                     Effect = KnownCardSlotEffects.Command
                 },
                 new SlotDefinition {
-                    Effect = KnownCardSlotEffects.ShieldWall
+                    Effect = KnownCardSlotEffects.Halberd
                 },
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.ShieldWall
