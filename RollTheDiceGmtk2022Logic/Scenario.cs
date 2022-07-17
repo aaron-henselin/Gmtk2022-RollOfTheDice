@@ -52,6 +52,17 @@ namespace RollTheDiceGmtk2022Logic
                 Oracle = new List<DiceMatchRule> { DiceMatchRule.Even, DiceMatchRule.Even, DiceMatchRule.Odd },
                 EnemyCard = EnemyCardFactory.BuildHydra()
             });
+
+            Scenarios.Add(2, new Scenario
+            {
+                AllowedCardDefinitions = new List<CardDefinition> {
+                    KnownCardDefinitions.Paladin,
+                    KnownCardDefinitions.Rogue,
+                },
+                DiceMatchRulePool = new List<DiceMatchRule> { DiceMatchRule.Six, DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.High },
+                Oracle = new List<DiceMatchRule> { DiceMatchRule.Low, DiceMatchRule.Six, DiceMatchRule.Low },
+                EnemyCard = EnemyCardFactory.BuildCyclops()
+            });
         }
     }
 
