@@ -20,7 +20,10 @@ namespace RollTheDiceGmtk2022.Game
         public static CardSlotEffect Bite = new CardSlotEffect { Amount = 20, Type = CardSlotEffectType.Attack, Name = "Bite", Description = "A vicious bite." };
         public static CardSlotEffect Munch = new CardSlotEffect { Amount = 5, Type = CardSlotEffectType.Attack, Name = "Nibble", Description = "Honestly, just teeth marks." };
 
-        public static CardSlotEffect Evade = new CardSlotEffect { Amount = 25, Type = CardSlotEffectType.Evade, Name = "Evade",Description="This character moves to the next position (if empty)." };
+        public static CardSlotEffect Backstab = new CardSlotEffect { Amount = 25, Type = CardSlotEffectType.Attack, Name = "Stab", Description = "Stabbing (the front)" };
+        public static CardSlotEffect Evade = new CardSlotEffect { Amount = 25, Type = CardSlotEffectType.Evade, Name = "Evade", Description = "This character moves to the next position (if empty)." };
+        public static CardSlotEffect Command = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.Command, Name = "Command", Description = "Command the character in the next position to act." };
+        public static CardSlotEffect ShieldWall = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.ShieldWall, Name = "Shield Wall", Description = "First attack this turn deals no damage." };
 
         public static CardSlotEffect Longbow = new CardSlotEffect { Amount = 20, Type = CardSlotEffectType.Attack, Name = "Longbow" };
 
