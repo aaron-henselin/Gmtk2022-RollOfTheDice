@@ -17,14 +17,10 @@ namespace RollTheDiceGmtk2022.Game
 
     public class KnownCardSlotEffects
     {
-        public static CardSlotEffect Bite = new CardSlotEffect { Amount = 5, Type = CardSlotEffectType.Attack, Name = "Bite" };
-        public static CardSlotEffect Munch = new CardSlotEffect { Amount = 20, Type = CardSlotEffectType.Attack, Name = "Munch" };
+        public static CardSlotEffect Bite = new CardSlotEffect { Amount = 20, Type = CardSlotEffectType.Attack, Name = "Bite", Description = "A vicious bite." };
+        public static CardSlotEffect Munch = new CardSlotEffect { Amount = 5, Type = CardSlotEffectType.Attack, Name = "Nibble", Description = "Honestly, just teeth marks." };
 
-        public static CardSlotEffect Backstab = new CardSlotEffect { Amount = 25, Type = CardSlotEffectType.Attack, Name="Backstab" };
-        public static CardSlotEffect Evade = new CardSlotEffect { Amount = 25, Type = CardSlotEffectType.Evade, Name = "Evade",Description="Switch positions with the character in the back row, the character in the back row will take the turn instead." };
-        public static CardSlotEffect Command = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.Command, Name="Command",Description = "Execute the action of the character in the back row." };
-        public static CardSlotEffect ShieldWall = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.ShieldWall, Name = "Shield Wall", Description = "Take 0 damage from the first attack this turn." };
-        public static CardSlotEffect Halberd = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.Attack, Name = "Halberd" };
+        public static CardSlotEffect Evade = new CardSlotEffect { Amount = 25, Type = CardSlotEffectType.Evade, Name = "Evade",Description="This character moves to the next position (if empty)." };
 
         public static CardSlotEffect Longbow = new CardSlotEffect { Amount = 20, Type = CardSlotEffectType.Attack, Name = "Longbow" };
 
