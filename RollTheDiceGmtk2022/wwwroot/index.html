@@ -193,6 +193,33 @@
 
             Plotly.newPlot('histogram', data, layout);
         }
+
+        function animateTurnPrediction(currentPrediction) {
+            var $turnPrediction = $(this);
+            //var currentPredictionRaw = $turnPrediction.text();
+            //var currentPrediction = parseInt(currentPredictionRaw);
+
+            if (isNaN(currentPrediction)) {
+                currentPrediction = 0;
+            }
+
+            var newPredictionRaw = $turnPrediction.attr("data-new-prediction");
+            var newPrediction = parseInt(newPredictionRaw);
+
+            newPrediction = (Math.random() * 100) / 1;
+
+            var curr = currentPrediction;
+
+            var turnPredictionCountUpInterval = window.setInterval(function () {
+                curr++;
+
+                $turnPrediction.text(curr);
+
+                if (curr == newPrediction) {
+                    window.clearInterval(turnPredictionCountUpInterval);
+                }
+            }, 100);
+        }
     </script>
 </body>
 
