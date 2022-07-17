@@ -51,7 +51,7 @@ namespace RollTheDiceGmtk2022.Game
                 IsDraw = !IsGameEnded,
                 Won = IsEnemyCardDefeated,
                 EndingTurn = timer.TurnNumber,
-                AllPartyMembersSurvived = !PlayerHand.Cards.Any(x => x.Value != null || x.Value.IsDead)
+                AllPartyMembersSurvived = !PlayerHand.Cards.Any(x => x.Value != null && x.Value.IsDead)
             };
 
         }
