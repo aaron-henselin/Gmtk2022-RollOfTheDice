@@ -35,7 +35,7 @@ namespace RollTheDiceGmtk2022.Game
         public static CardSlotEffect Spear = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.Attack, Name = "Spear", Description = "Spear" };
 
 
-        public static CardSlotEffect HydraAttack = new CardSlotEffect { Amount = 25, Type = CardSlotEffectType.Attack, Name = "Chomp", Description = "You dodged 8 heads! Ouch." };
+        public static CardSlotEffect HydraAttack = new CardSlotEffect { Amount = 50, Type = CardSlotEffectType.Attack, Name = "Chomp", Description = "You dodged 8 heads! Ouch." };
         public static CardSlotEffect HydraHeal = new CardSlotEffect { Amount = 15, Type = CardSlotEffectType.Heal, Name = "Regenerate", Description = "The Hydra's legendary healing is largely embellished" };
 
         public static CardSlotEffect CyclopsAttack = new CardSlotEffect { Amount = 5, Type = CardSlotEffectType.Attack, Name = "Smack", Description = "Playful, but still punishing!" };
@@ -58,6 +58,15 @@ namespace RollTheDiceGmtk2022.Game
             rats.Slots[1].Rule = DiceMatchRule.Odd;
             return rats;
         }
+
+        public static Card BuildHydraPlusPlus()
+        {
+            var rats = new Card(KnownCardDefinitions.HydraPlusPlus, -1);
+            rats.Slots[0].Rule = DiceMatchRule.Even;
+            rats.Slots[1].Rule = DiceMatchRule.Odd;
+            return rats;
+        }
+
         public static Card BuildCyclops()
         {
             var cyclops = new Card(KnownCardDefinitions.Cyclops, -1);
@@ -148,6 +157,20 @@ namespace RollTheDiceGmtk2022.Game
         {
             Name = "Hydra",
             Hp = 100,
+            Slots = new List<SlotDefinition> {
+                new SlotDefinition {
+                    Effect = KnownCardSlotEffects.HydraAttack
+                },
+                new SlotDefinition {
+                    Effect = KnownCardSlotEffects.HydraHeal
+                }
+            }
+        };
+
+        public static CardDefinition HydraPlusPlus = new CardDefinition
+        {
+            Name = "Hydra++",
+            Hp = 400,
             Slots = new List<SlotDefinition> {
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.HydraAttack

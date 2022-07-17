@@ -79,6 +79,19 @@ namespace RollTheDiceGmtk2022Logic
                 Oracle = new List<DiceMatchRule> { DiceMatchRule.Six, DiceMatchRule.Odd },
                 EnemyCard = EnemyCardFactory.BuildHydra()
             });
+
+            Scenarios.Add(4, new Scenario
+            {
+                RecommendedNumberOfTurns = 2,
+                AllowedCardDefinitions = new List<CardDefinition> {
+                    KnownCardDefinitions.Cleric,
+                    KnownCardDefinitions.Rogue,
+                    KnownCardDefinitions.Paladin,
+                },
+                DiceMatchRulePool = new List<DiceMatchRule> { DiceMatchRule.Six, DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.High },
+                Oracle = new List<DiceMatchRule> { DiceMatchRule.Six, DiceMatchRule.Even, DiceMatchRule.Odd },
+                EnemyCard = EnemyCardFactory.BuildHydraPlusPlus()
+            });
         }
     }
 
