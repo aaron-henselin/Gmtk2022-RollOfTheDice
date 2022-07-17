@@ -211,11 +211,16 @@ namespace RollTheDiceGmtk2022.Game
             IsDraw = outcomes.Count(x => x.IsDraw) / (decimal)totalOutcomeCount;
             Won = outcomes.Count(x => x.Won) / (decimal)totalOutcomeCount;
             AllPartyMembersSurvived = outcomes.Count(x => x.AllPartyMembersSurvived) / (decimal)totalOutcomeCount;
+            if (outcomes.Any(x => x.Won))
+                MinTurnCount = outcomes.Where(x => x.Won).Min(x => x.EndingTurn)+1;
+            else
+                MinTurnCount = null;
         }
 
         public decimal IsDraw { get; set; }
         public decimal Won { get; set; }
         public decimal AllPartyMembersSurvived { get; set; }
+        public int? MinTurnCount { get; set; }
     }
 
     public class GameOutcome

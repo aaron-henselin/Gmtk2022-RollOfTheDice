@@ -11,7 +11,7 @@
             <div class="col-3">
                 <PlacedCard Card="@EnemyCard" IsEnemy="@true"></PlacedCard>
 
-                <div id="turn-prediction" data-new-prediction="@CurrentNumberOfTurnsToWin"></div>
+                
                 <OutcomePrediction Outcome=@ExpectedOutcome></OutcomePrediction>
             </div>
 
@@ -79,7 +79,7 @@
     @{
         var histogramDataPointsJson = System.Text.Json.JsonSerializer.Serialize(histogramDataPoints);
     }
-
+    <div class="alert alert-info">The fates can complete this level in just @Scenario.RecommendedNumberOfTurns turns. Here's how your peers did:</div>
     <div id="histogram" data-points="@histogramDataPointsJson" data-your-fastest-this-session="@FastestNumberOfTurnsToWinThisSession"></div>
 </div>
 
@@ -315,7 +315,7 @@
                 gs.Log.Add(ex.StackTrace);
             }
 
-            
+
             this.StateHasChanged();
 
         }
@@ -415,6 +415,8 @@
 
         CardLocationDragStart = null;
 
+        JSRuntime.InvokeAsync<string>("PlayBackpackSound");
+
         Recalculate();
         this.StateHasChanged();
     }
@@ -437,6 +439,8 @@
         OnDiceMatchRuleMoved(DiceMatchRuleLocationPayload.Value, location);
 
         DiceMatchRuleLocationPayload = null;
+
+        JSRuntime.InvokeAsync<string>("PlayBrickSound");
 
         Recalculate();
         this.StateHasChanged();

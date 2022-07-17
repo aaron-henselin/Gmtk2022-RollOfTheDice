@@ -9,6 +9,7 @@ namespace RollTheDiceGmtk2022Logic
 {
     public class Scenario
     {
+        public int RecommendedNumberOfTurns { get; set; }
         public string Name { get; set; }
         public List<DiceMatchRule> Oracle { get; set; }
         public List<DiceMatchRule> DiceMatchRulePool { get; set; }
@@ -33,6 +34,7 @@ namespace RollTheDiceGmtk2022Logic
         {
             Scenarios.Add(0, new Scenario
             {
+                RecommendedNumberOfTurns = 1,
                 AllowedCardDefinitions = new List<CardDefinition> {
                     KnownCardDefinitions.Paladin,
                     KnownCardDefinitions.Rogue,
@@ -40,10 +42,11 @@ namespace RollTheDiceGmtk2022Logic
                 DiceMatchRulePool = new List<DiceMatchRule> { DiceMatchRule.Even, DiceMatchRule.Odd, DiceMatchRule.Six },
                 Oracle = new List<DiceMatchRule> { DiceMatchRule.Even, DiceMatchRule.Even, DiceMatchRule.Odd },
                 EnemyCard = EnemyCardFactory.BuildPlagueRats()
-            });
+            }) ;
 
             Scenarios.Add(1, new Scenario
             {
+                RecommendedNumberOfTurns = 2,
                 AllowedCardDefinitions = new List<CardDefinition> {
                     KnownCardDefinitions.Paladin,
                     KnownCardDefinitions.Rogue,
@@ -55,6 +58,7 @@ namespace RollTheDiceGmtk2022Logic
 
             Scenarios.Add(2, new Scenario
             {
+                RecommendedNumberOfTurns = 2,
                 AllowedCardDefinitions = new List<CardDefinition> {
                     KnownCardDefinitions.Paladin,
                     KnownCardDefinitions.Rogue,

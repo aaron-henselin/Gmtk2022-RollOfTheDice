@@ -9,6 +9,15 @@
         <tr>
             <td>100% Survival Percentage</td><td>@Outcome.AllPartyMembersSurvived.ToString("P")</td>
         </tr>
+        <tr>
+            <td>
+                Won at turn:
+            </td>
+            <td>
+                @Outcome.MinTurnCount
+                @*<span id="turn-prediction" data-new-prediction="@Outcome.MinTurnCount"></span>*@
+            </td>
+        </tr>
     </table>
 }
 

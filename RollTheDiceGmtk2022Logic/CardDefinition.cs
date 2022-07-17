@@ -47,8 +47,8 @@ namespace RollTheDiceGmtk2022.Game
         public static Card BuildPlagueRats()
         {
             var rats = new Card(KnownCardDefinitions.PlagueRats, -1);
-            rats.Slots[0].Rule = DiceMatchRule.Low;
-            rats.Slots[1].Rule = DiceMatchRule.Six;
+            rats.Slots[0].Rule = DiceMatchRule.Six;
+            rats.Slots[1].Rule = DiceMatchRule.Low;
             return rats;
         }
         public static Card BuildHydra()
@@ -76,13 +76,7 @@ namespace RollTheDiceGmtk2022.Game
             Slots = new List<SlotDefinition> {
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.Backstab
-                },
-                new SlotDefinition {
-                    Effect = KnownCardSlotEffects.Evade
-                },
-                new SlotDefinition {
-                    Effect = KnownCardSlotEffects.Evade
-                },
+                }
             }
         };
 
@@ -146,10 +140,7 @@ namespace RollTheDiceGmtk2022.Game
                 },
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.Munch
-                },
-                new SlotDefinition {
-                    Effect = KnownCardSlotEffects.Munch
-                },
+                }
             }
         };
 

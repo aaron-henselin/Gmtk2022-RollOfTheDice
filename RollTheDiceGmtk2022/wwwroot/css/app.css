@@ -57,6 +57,10 @@ h3 {
     font-family: 'DisneyHeroic';
 }
 
+h1 {
+    font-family: 'DisneyHeroic';
+}
+
 .oracle-dice-match-container {
     background: url('../oracle.png');
     background-position-x: -40px;
