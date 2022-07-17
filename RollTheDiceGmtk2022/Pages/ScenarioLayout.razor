@@ -6,6 +6,8 @@
         <div class="row">
             <div class="col-3">
                 <PlacedCard Card="@EnemyCard" IsEnemy="@true"></PlacedCard>
+
+                <div id="turn-prediction" data-new-prediction="@CurrentNumberOfTurnsToWin"></div>
             </div>
 
             <div class="col-9">
@@ -159,15 +161,13 @@
     List<int> histogramDataPoints;
     protected async override Task OnInitializedAsync()
     {
-        histogramDataPoints = await HttpClient.GetFromJsonAsync<List<int>>("api/Histogram?scenario=0");
+        histogramDataPoints = await HttpClient.GetFromJsonAsync<List<int>>($"api/Histogram?scenario={ScenarioIndex}");
 
         await base.OnInitializedAsync();
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
-
-
         await JSRuntime.InvokeAsync<string>("buildHistogram");
     }
 
@@ -228,6 +228,7 @@
     }
 
     GameOutcomeProbability ExpectedOutcome { get; set; }
+    int? CurrentNumberOfTurnsToWin { get; set; }
     int? FastestNumberOfTurnsToWinThisSession { get; set; }
 
     object gsLock = new object();
@@ -245,9 +246,12 @@
                 allOutcomes.Add(thisOutcome);
             }
             ExpectedOutcome = new GameOutcomeProbability(allOutcomes);
+            CurrentNumberOfTurnsToWin = 0;
             if (ExpectedOutcome.Won > .9m)
             {
                 var fastest = allOutcomes.Where(x => x.Won).Min(x => x.EndingTurn);
+
+                CurrentNumberOfTurnsToWin = fastest;
 
                 if (bestRecord == null || bestRecord > fastest)
                 {
@@ -267,7 +271,9 @@
 
                     bestRecord = fastest;
                 }
-            }  
+            }
+
+            JSRuntime.InvokeAsync<string>("animateTurnPrediction", CurrentNumberOfTurnsToWin);
         }
 
         if (isRunning && !gs.IsGameEnded){
