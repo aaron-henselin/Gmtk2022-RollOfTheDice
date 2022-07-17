@@ -3,13 +3,16 @@
 
 @{
     var cardClass = IsEnemy ? "enemy-card" : "user-card";
+    var turnNumber = Location.CollectionIndex + 1;
 }
 
 <div class="card @cardClass" draggable="true" @ondragstart="@(() => HandleDragStart(Location))" ondragover="event.preventDefault();" @ondrop="@(() => HandleDragStop(Location))">
     @if (!IsEnemy)
     {
         <div class="oracle-dice-match-container">
-            <span class="dice-match-rule">@Oracle</span>
+            <span class="turn-number">@turnNumber</span>
+            <span class="dice-match-rule bob-on-hover">@Oracle</span>
+            @*<span class="turn-progression">&rarr;</span>*@
         </div>
     }
 
