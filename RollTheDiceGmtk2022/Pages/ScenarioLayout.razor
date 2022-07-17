@@ -13,6 +13,13 @@
 
                 
                 <OutcomePrediction Outcome=@ExpectedOutcome></OutcomePrediction>
+
+                @if (ExpectedOutcome != null && ExpectedOutcome.Won > 0.8m)
+                {
+                    <button @onclick="@(() => NavigateNext())">Next</button>        
+                }
+                
+                
             </div>
 
             <div class="col-9">
@@ -447,6 +454,14 @@
 
         Recalculate();
         this.StateHasChanged();
+    }
+
+    private void NavigateNext()
+    {
+        if (ScenarioIndex == 2)
+            NavigationManager.NavigateTo("ThankYou");
+        else
+            NavigationManager.NavigateTo((ScenarioIndex+2).ToString());
     }
 }
 

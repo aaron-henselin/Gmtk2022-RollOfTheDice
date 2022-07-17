@@ -46,7 +46,7 @@ namespace RollTheDiceGmtk2022Logic
 
             Scenarios.Add(1, new Scenario
             {
-                RecommendedNumberOfTurns = 2,
+                RecommendedNumberOfTurns = 3,
                 AllowedCardDefinitions = new List<CardDefinition> {
                     KnownCardDefinitions.Paladin,
                     KnownCardDefinitions.Rogue,
