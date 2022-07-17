@@ -242,6 +242,7 @@ button.close.remove-card span {
 .card-effect-description {
     color: #EE9463;
     font-size: .85rem;
+    font-style: italic;
 }
 
 .draggable-dice-match-rule-receiver + .draggable-dice-match-rule-receiver {

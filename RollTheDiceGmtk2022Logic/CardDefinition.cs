@@ -31,6 +31,8 @@ namespace RollTheDiceGmtk2022.Game
         public static CardSlotEffect HealingWords = new CardSlotEffect { Amount = 5, Type = CardSlotEffectType.Heal, Name = "Healing Aura", Description = "Heals all characters." };
         public static CardSlotEffect HealingHerbsAndSpices = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.Heal, Name = "Healing Herbs And Spices", Description = "Heal the character in the back row." };
         public static CardSlotEffect TollOfTheDead = new CardSlotEffect { Amount = 1.1m, Type = CardSlotEffectType.DamageBuff, Name = "DMG +", Description = "DMG * 1.1 for the character in the back row" };
+
+        public static CardSlotEffect Spear = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.Attack, Name = "Spear", Description = "Spear" };
     }
 
     public class EnemyCardFactory
@@ -89,7 +91,7 @@ namespace RollTheDiceGmtk2022.Game
                     Effect = KnownCardSlotEffects.Command
                 },
                 new SlotDefinition {
-                    Effect = KnownCardSlotEffects.Halberd
+                    Effect = KnownCardSlotEffects.Spear
                 },
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.ShieldWall
