@@ -54,7 +54,7 @@ a, .btn-link {
     }
 
 h3 {
-    font-family: 'heorot';
+    font-family: 'DisneyHeroic';
 }
 
 .oracle-dice-match-container {
@@ -88,6 +88,7 @@ h3 {
     font-size: 3em;
     color: white;
     text-shadow: -1px 1px 3px black;
+    font-family: 'DisneyHeroic';
 }
 
 .oracle-dice-match-container {
@@ -183,6 +184,7 @@ h3 {
     padding: 5px;
     vertical-align: middle;
     letter-spacing: 1.5px;
+    font-family: 'DisneyHeroic';
 }
 
 button.close.remove-card {

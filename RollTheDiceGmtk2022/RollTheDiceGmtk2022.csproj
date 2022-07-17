@@ -14,4 +14,8 @@
     <ProjectReference Include="..\RollTheDiceGmtk2022Logic\RollTheDiceGmtk2022Logic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\css\DisneyHeroic\fonts\" />
+  </ItemGroup>
+
 </Project>
