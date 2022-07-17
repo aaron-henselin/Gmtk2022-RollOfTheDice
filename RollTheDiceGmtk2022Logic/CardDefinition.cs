@@ -33,6 +33,10 @@ namespace RollTheDiceGmtk2022.Game
         public static CardSlotEffect TollOfTheDead = new CardSlotEffect { Amount = 1.1m, Type = CardSlotEffectType.DamageBuff, Name = "DMG +", Description = "DMG * 1.1 for the character in the back row" };
 
         public static CardSlotEffect Spear = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.Attack, Name = "Spear", Description = "Spear" };
+
+
+        public static CardSlotEffect HydraAttack = new CardSlotEffect { Amount = 25, Type = CardSlotEffectType.Attack, Name = "Chomp", Description = "Chomp" };
+        public static CardSlotEffect HydraHeal = new CardSlotEffect { Amount = 15, Type = CardSlotEffectType.Attack, Name = "Heal", Description = "Heal" };
     }
 
     public class EnemyCardFactory
@@ -42,6 +46,13 @@ namespace RollTheDiceGmtk2022.Game
             var rats = new Card(KnownCardDefinitions.PlagueRats, -1);
             rats.Slots[0].Rule = DiceMatchRule.Low;
             rats.Slots[1].Rule = DiceMatchRule.Six;
+            return rats;
+        }
+        public static Card BuildHydra()
+        {
+            var rats = new Card(KnownCardDefinitions.Hydra, -1);
+            rats.Slots[0].Rule = DiceMatchRule.Even;
+            rats.Slots[1].Rule = DiceMatchRule.Odd;
             return rats;
         }
     }
@@ -132,7 +143,19 @@ namespace RollTheDiceGmtk2022.Game
             }
         };
 
-    
+        public static CardDefinition Hydra = new CardDefinition
+        {
+            Name = "Hydra",
+            Hp = 100,
+            Slots = new List<SlotDefinition> {
+                new SlotDefinition {
+                    Effect = KnownCardSlotEffects.HydraAttack
+                },
+                new SlotDefinition {
+                    Effect = KnownCardSlotEffects.HydraHeal
+                }
+            }
+        };
 
     }
 

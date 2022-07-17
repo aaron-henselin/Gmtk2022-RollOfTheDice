@@ -1,6 +1,9 @@
 ﻿@using RollTheDiceGmtk2022.Game
 @using RollTheDiceGmtk2022Logic
 
+@if (Scenario != null)
+{
+    
 <div class="container-fluid">
     <div class="board mt-5">
         <div class="row">
@@ -107,6 +110,8 @@
 }
 ********************* DEBUG *********************
 </pre>
+}
+
 
 @inject HttpClient HttpClient
 @inject BlazorTimer BlazorTimer
@@ -139,23 +144,32 @@
     {
         base.OnInitialized();
 
-        Scenario = ScenarioRegistrar.Scenarios[ScenarioIndex];
+
+
+        BlazorTimer.SetTimer(500);
+        BlazorTimer.OnElapsed += SimulationTick;
+    }
+
+    protected override void OnParametersSet()
+    {
+        var nextScenario = ScenarioRegistrar.Scenarios[ScenarioIndex];
 
         int pos= 0;
-        foreach (var item in Scenario.DiceMatchRulePool)
+        foreach (var item in nextScenario.DiceMatchRulePool)
             DiceMatchRuleDashboard.Add(pos++, item);
 
-        this.Oracle = Scenario.Oracle;
+        this.Oracle = nextScenario.Oracle;
 
         for (var i = 0; i < Oracle.Count; i++)
         {
             PlacedCards.Add(i, null);
         }
 
-        EnemyCard = Scenario.EnemyCard;
+        EnemyCard = nextScenario.EnemyCard;
 
-        BlazorTimer.SetTimer(500);
-        BlazorTimer.OnElapsed += SimulationTick;
+        this.Scenario = nextScenario;
+
+        base.OnParametersSet();
     }
 
     List<int> histogramDataPoints;
@@ -182,10 +196,6 @@
         return PlacedCards.Values.Any(x => x.Id == cardId);
     }
 
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-    }
 
     public void OnCardDefinitionPlaced(CardDefinition cardDef, int cardId, int handPosition)
     {
@@ -236,6 +246,9 @@
     int? bestRecord = null;
     private void SimulationTick()
     {
+        if (Scenario == null)
+            return;
+
         if (!isRunning)
         {
             List<GameOutcome> allOutcomes = new List<GameOutcome>();

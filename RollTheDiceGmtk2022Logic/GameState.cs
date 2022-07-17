@@ -138,7 +138,11 @@ namespace RollTheDiceGmtk2022.Game
                 var enemyCardSlotsToActivate = EnemyCard.Slots.Where(x => x.Rule != null && activationCriteria.Contains(x.Rule.Value)).ToList();
                 Log.Add("Slot count activating:" + enemyCardSlotsToActivate.Count);
                 foreach (var slotToActivate in enemyCardSlotsToActivate)
+                {
+                    var targetCard = slotToActivate.Effect.Type == CardSlotEffectType.Heal ? EnemyCard : activePlayerCard;
                     RunEffect(EnemyCard, slotToActivate.Effect, activePlayerCard);
+                }
+                    
             }
 
             //remove one-time effects.
