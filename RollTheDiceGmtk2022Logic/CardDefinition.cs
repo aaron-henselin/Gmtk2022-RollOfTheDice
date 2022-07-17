@@ -35,8 +35,11 @@ namespace RollTheDiceGmtk2022.Game
         public static CardSlotEffect Spear = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.Attack, Name = "Spear", Description = "Spear" };
 
 
-        public static CardSlotEffect HydraAttack = new CardSlotEffect { Amount = 25, Type = CardSlotEffectType.Attack, Name = "Chomp", Description = "Chomp" };
-        public static CardSlotEffect HydraHeal = new CardSlotEffect { Amount = 15, Type = CardSlotEffectType.Heal, Name = "Heal", Description = "Heal" };
+        public static CardSlotEffect HydraAttack = new CardSlotEffect { Amount = 25, Type = CardSlotEffectType.Attack, Name = "Chomp", Description = "You dodged 8 heads! Ouch." };
+        public static CardSlotEffect HydraHeal = new CardSlotEffect { Amount = 15, Type = CardSlotEffectType.Heal, Name = "Regenerate", Description = "The Hydra's legendary healing is largely embellished" };
+
+        public static CardSlotEffect CyclopsAttack = new CardSlotEffect { Amount = 5, Type = CardSlotEffectType.Attack, Name = "Smack", Description = "Playful, but still punishing!" };
+        public static CardSlotEffect CyclopsDeath = new CardSlotEffect { Amount = 777, Type = CardSlotEffectType.Attack, Name = "Overhead Smash", Description = "Turns you into 'No Man' very quickly." };
     }
 
     public class EnemyCardFactory
@@ -54,6 +57,13 @@ namespace RollTheDiceGmtk2022.Game
             rats.Slots[0].Rule = DiceMatchRule.Even;
             rats.Slots[1].Rule = DiceMatchRule.Odd;
             return rats;
+        }
+        public static Card BuildCyclops()
+        {
+            var cyclops = new Card(KnownCardDefinitions.Cyclops, -1);
+            cyclops.Slots[0].Rule = DiceMatchRule.Odd;
+            cyclops.Slots[1].Rule = DiceMatchRule.Six;
+            return cyclops;
         }
     }
 
@@ -153,6 +163,20 @@ namespace RollTheDiceGmtk2022.Game
                 },
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.HydraHeal
+                }
+            }
+        };
+
+        public static CardDefinition Cyclops = new CardDefinition
+        {
+            Name = "Cyclops",
+            Hp = 100,
+            Slots = new List<SlotDefinition> {
+                new SlotDefinition {
+                    Effect = KnownCardSlotEffects.CyclopsAttack
+                },
+                new SlotDefinition {
+                    Effect = KnownCardSlotEffects.CyclopsDeath
                 }
             }
         };
