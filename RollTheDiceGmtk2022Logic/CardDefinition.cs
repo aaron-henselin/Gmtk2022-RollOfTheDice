@@ -30,7 +30,7 @@ namespace RollTheDiceGmtk2022.Game
         public static CardSlotEffect LayOnHands = new CardSlotEffect { Amount = 30, Type = CardSlotEffectType.Heal, Name = "Lay On Hands",Description = "Heal the character in the back row." };
         public static CardSlotEffect HealingWords = new CardSlotEffect { Amount = 5, Type = CardSlotEffectType.Heal, Name = "Healing Aura", Description = "Heals all characters." };
         public static CardSlotEffect HealingHerbsAndSpices = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.Heal, Name = "Healing Herbs And Spices", Description = "Heal the character in the back row." };
-        public static CardSlotEffect TollOfTheDead = new CardSlotEffect { Amount = 1.1m, Type = CardSlotEffectType.DamageBuff, Name = "DMG +", Description = "DMG * 1.1 for the character in the back row" };
+        public static CardSlotEffect TollOfTheDead = new CardSlotEffect { Amount = 2m, Type = CardSlotEffectType.DamageBuff, Name = "Toll Of the Dead", Description = "Permanent DMG * 2 for the character in the next position." };
 
         public static CardSlotEffect Spear = new CardSlotEffect { Amount = 10, Type = CardSlotEffectType.Attack, Name = "Spear", Description = "Spear" };
 
@@ -116,7 +116,7 @@ namespace RollTheDiceGmtk2022.Game
         public static CardDefinition Cleric = new CardDefinition
         {
             Name = "Cleric",
-            Hp = 50,
+            Hp = 75,
             Slots = new List<SlotDefinition> {
                 new SlotDefinition {
                     Effect = KnownCardSlotEffects.LayOnHands
@@ -125,7 +125,7 @@ namespace RollTheDiceGmtk2022.Game
                     Effect = KnownCardSlotEffects.TollOfTheDead
                 },
                 new SlotDefinition {
-                    Effect = KnownCardSlotEffects.TollOfTheDead
+                    Effect = KnownCardSlotEffects.Spear
                 },
             }
         };

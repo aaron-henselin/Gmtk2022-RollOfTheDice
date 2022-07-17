@@ -103,7 +103,7 @@ namespace RollTheDiceGmtk2022.Game
                 }
                 else
                 {
-                    Card targetCard;
+                    Card targetCard = null;
                     if (slotToActivate.Effect.Type == CardSlotEffectType.Attack)
                         targetCard = EnemyCard;
                     if (slotToActivate.Effect.Type == CardSlotEffectType.Heal ||
@@ -118,7 +118,7 @@ namespace RollTheDiceGmtk2022.Game
                     }
                         
 
-                    RunEffect(cardToActivate, slotToActivate.Effect, EnemyCard);
+                    RunEffect(cardToActivate, slotToActivate.Effect, targetCard);
                 }
 
             }
@@ -184,11 +184,11 @@ namespace RollTheDiceGmtk2022.Game
                     return;
                     
                 case CardSlotEffectType.Heal:
-                    source.Hp += Convert.ToInt32(effect.Amount);
+                    target.Hp += Convert.ToInt32(effect.Amount);
                     return;
 
                 case CardSlotEffectType.DamageBuff:
-                    source.DamageBuffs.Add(effect.Amount);
+                    target.DamageBuffs.Add(effect.Amount);
                     return;
 
                 case CardSlotEffectType.ShieldWall:
