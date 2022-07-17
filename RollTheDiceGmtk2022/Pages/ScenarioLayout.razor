@@ -12,6 +12,7 @@
                 <PlacedCard Card="@EnemyCard" IsEnemy="@true"></PlacedCard>
 
                 <div id="turn-prediction" data-new-prediction="@CurrentNumberOfTurnsToWin"></div>
+                <OutcomePrediction Outcome=@ExpectedOutcome></OutcomePrediction>
             </div>
 
             <div class="col-9">
@@ -90,7 +91,7 @@
     <button id="run-button" @onclick="@(() => StopSimulation())">STOP</button>    
 }
 
-<OutcomePrediction Outcome=@ExpectedOutcome></OutcomePrediction>
+
 
 <pre>
 ********************* DEBUG *********************
@@ -247,6 +248,45 @@
 
     object gsLock = new object();
 
+
+    private void Recalculate()
+    {
+        List<GameOutcome> allOutcomes = new List<GameOutcome>();
+        for (var i = 0; i < 5; i++)
+        {
+            var gs = BuildUpGameState();
+            var thisOutcome = gs.AdvanceGameStateUntilCompletion(50);
+            allOutcomes.Add(thisOutcome);
+        }
+        ExpectedOutcome = new GameOutcomeProbability(allOutcomes);
+        CurrentNumberOfTurnsToWin = null;
+        if (ExpectedOutcome.Won > .9m)
+        {
+            var fastest = allOutcomes.Where(x => x.Won).Min(x => x.EndingTurn);
+
+            CurrentNumberOfTurnsToWin = fastest;
+
+            if (bestRecord == null || bestRecord > fastest)
+            {
+                FastestNumberOfTurnsToWinThisSession = fastest + 1; // fastest is zero based index
+
+                try
+                {
+                    var task = HttpClient.PostAsJsonAsync($"api/injest?scenario={ScenarioIndex}", this.PlacedCards);
+                    task.ConfigureAwait(false);
+                    task.Start();
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+
+                bestRecord = fastest;
+            }
+        }
+    }
+
     int? bestRecord = null;
     private void SimulationTick()
     {
@@ -255,40 +295,7 @@
 
         if (!isRunning)
         {
-            List<GameOutcome> allOutcomes = new List<GameOutcome>();
-            for (var i = 0; i < 5; i++)
-            {
-                var gs = BuildUpGameState();
-                var thisOutcome = gs.AdvanceGameStateUntilCompletion(50);
-                allOutcomes.Add(thisOutcome);
-            }
-            ExpectedOutcome = new GameOutcomeProbability(allOutcomes);
-            CurrentNumberOfTurnsToWin = null;
-            if (ExpectedOutcome.Won > .9m)
-            {
-                var fastest = allOutcomes.Where(x => x.Won).Min(x => x.EndingTurn);
-
-                CurrentNumberOfTurnsToWin = fastest;
-
-                if (bestRecord == null || bestRecord > fastest)
-                {
-                    FastestNumberOfTurnsToWinThisSession = fastest + 1; // fastest is zero based index
-
-                    try
-                    {
-                       var task = HttpClient.PostAsJsonAsync($"api/injest?scenario={ScenarioIndex}", this.PlacedCards);
-                       task.ConfigureAwait(false);
-                       task.Start();
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-
-
-                    bestRecord = fastest;
-                }
-            }
+            Recalculate();
 
 
         }
@@ -308,6 +315,7 @@
                 gs.Log.Add(ex.StackTrace);
             }
 
+            
             this.StateHasChanged();
 
         }
@@ -323,6 +331,7 @@
 
         PlacedCards[cardLocation.CollectionIndex] = new Card(cardDefinition, newCardId);
 
+        Recalculate();
         this.StateHasChanged();
     }
 
@@ -352,6 +361,7 @@
                 ReturnDiceMatchRuleToDashboard(slot.Rule.Value);
         }
 
+        Recalculate();
         this.StateHasChanged();
     }
 
@@ -362,6 +372,9 @@
 
         SetDiceMatchRuleByLocation(src, destRule);
         SetDiceMatchRuleByLocation(dest, srcRule);
+
+        Recalculate();
+        this.StateHasChanged();
     }
 
     private DiceMatchRule? GetDiceMatchRuleByLocation(DiceMatchRuleLocation location)
@@ -402,6 +415,7 @@
 
         CardLocationDragStart = null;
 
+        Recalculate();
         this.StateHasChanged();
     }
 
@@ -424,6 +438,7 @@
 
         DiceMatchRuleLocationPayload = null;
 
+        Recalculate();
         this.StateHasChanged();
     }
 }
